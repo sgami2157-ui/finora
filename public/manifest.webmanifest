@@ -1,0 +1,10 @@
+{
+  "name": "FINORA — Business Accounting & Financial Intelligence",
+  "short_name": "FINORA",
+  "lang": "id",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#111318",
+  "theme_color": "#FF8A3D",
+  "icons": []
+}
