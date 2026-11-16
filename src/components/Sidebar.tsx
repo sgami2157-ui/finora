@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Icon, Logo, type IconName } from "./Icon";
@@ -26,14 +26,33 @@ export default function Sidebar({ businessName }: { businessName: string | null 
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  // Tutup drawer saat pindah halaman, tekan Esc, atau layar melebar; kunci scroll body saat terbuka.
+  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    const mq = window.matchMedia("(min-width: 801px)");
+    const onMq = () => { if (mq.matches) setOpen(false); };
+    window.addEventListener("keydown", onKey);
+    mq.addEventListener("change", onMq);
+    document.body.style.overflow = "hidden";
+    return () => { window.removeEventListener("keydown", onKey); mq.removeEventListener("change", onMq); document.body.style.overflow = ""; };
+  }, [open]);
+
   async function logout() {
     await supabaseBrowser().auth.signOut();
     router.replace("/login"); router.refresh();
   }
   return (
     <>
-      <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>☰ Menu</button>
-      <aside className={`sidebar ${open ? "open" : ""}`}>
+      <header className="topbar">
+        <a href="/dashboard" aria-label="FINORA"><Logo size={30} /></a>
+        <button className="burger" onClick={() => setOpen(!open)} aria-label={open ? "Tutup menu" : "Buka menu"} aria-expanded={open} aria-controls="app-sidebar">
+          <span /><span /><span />
+        </button>
+      </header>
+      <div className={`scrim ${open ? "show" : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
+      <aside id="app-sidebar" className={`sidebar ${open ? "open" : ""}`}>
         <div className="sb-top">
           <div className="brand"><Logo size={32} />
             {businessName && <small>{businessName}</small>}
