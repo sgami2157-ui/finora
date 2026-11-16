@@ -1,45 +1,57 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { Icon, Logo, type IconName } from "./Icon";
 
-// Hanya modul yang benar-benar berfungsi yang berupa tautan. Sisanya ditandai jelas "belum tersedia".
-const NAV: { label: string; href?: string }[] = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Transaksi" },
-  { label: "Jurnal Akuntansi", href: "/journal" },
-  { label: "Kas & Bank" },
-  { label: "Penjualan" },
-  { label: "Pembelian" },
-  { label: "Produk & Persediaan" },
-  { label: "Piutang" },
-  { label: "Utang" },
-  { label: "Biaya Operasional" },
-  { label: "Laporan Keuangan", href: "/reports" },
-  { label: "AI Financial Analyst" },
-  { label: "Dokumen" },
-  { label: "Pengaturan", href: "/settings" },
+// Hanya modul yang benar-benar berfungsi yang berupa tautan. Sisanya ditandai jelas "segera".
+const NAV: { label: string; icon: IconName; href?: string }[] = [
+  { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
+  { label: "Transaksi", icon: "transfer" },
+  { label: "Jurnal Akuntansi", icon: "book", href: "/journal" },
+  { label: "Kas & Bank", icon: "bank" },
+  { label: "Penjualan", icon: "cart" },
+  { label: "Pembelian", icon: "bag" },
+  { label: "Produk & Persediaan", icon: "box" },
+  { label: "Piutang", icon: "coin" },
+  { label: "Utang", icon: "banknote" },
+  { label: "Biaya Operasional", icon: "wallet" },
+  { label: "Laporan Keuangan", icon: "chart", href: "/reports" },
+  { label: "AI Financial Analyst", icon: "sparkles" },
+  { label: "Dokumen", icon: "folder" },
+  { label: "Pengaturan", icon: "settings", href: "/settings" },
 ];
 
 export default function Sidebar({ businessName }: { businessName: string | null }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   async function logout() {
     await supabaseBrowser().auth.signOut();
     router.replace("/login"); router.refresh();
   }
   return (
     <>
-      <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu">☰ Menu</button>
+      <button className="menu-btn" onClick={() => setOpen(!open)} aria-label="Menu" aria-expanded={open}>☰ Menu</button>
       <aside className={`sidebar ${open ? "open" : ""}`}>
-        <div className="brand">{process.env.NEXT_PUBLIC_APP_NAME ?? "FINORA"}</div>
-        {businessName && <div style={{ padding: "0 12px 12px", color: "var(--secondary)", fontSize: 13 }}>{businessName}</div>}
-        <nav className="nav">
-          {NAV.map((n) =>
-            n.href ? <a key={n.label} href={n.href}>{n.label}</a>
-                   : <span key={n.label} title="Belum tersedia di versi ini">{n.label} · segera</span>)}
-        </nav>
-        <div style={{ padding: 12 }}><button onClick={logout}>Keluar</button></div>
+        <div className="sb-top">
+          <div className="brand"><Logo size={32} />
+            {businessName && <small>{businessName}</small>}
+          </div>
+          <nav className="nav">
+            {NAV.map((n) => {
+              const active = !!n.href && (pathname === n.href || pathname.startsWith(n.href + "/"));
+              return n.href ? (
+                <a key={n.label} href={n.href} className={active ? "active" : ""} aria-current={active ? "page" : undefined}>
+                  <Icon name={n.icon} />{n.label}
+                </a>
+              ) : (
+                <span key={n.label} title="Belum tersedia di versi ini"><Icon name={n.icon} />{n.label}<em>segera</em></span>
+              );
+            })}
+          </nav>
+        </div>
+        <button className="logout" onClick={logout}><Icon name="logout" />Keluar</button>
       </aside>
     </>
   );

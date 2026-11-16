@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import AuthShell from "@/components/AuthShell";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -19,18 +20,30 @@ export default function RegisterPage() {
     if (error) setError(error.message); else setDone(true);
   }
 
-  if (done) return <main className="main"><p>Pendaftaran berhasil. Periksa email Anda untuk konfirmasi, lalu <a href="/login">masuk</a>.</p></main>;
+  if (done) return (
+    <AuthShell mode="register">
+      <h1>Periksa email Anda</h1>
+      <p className="muted">Pendaftaran berhasil. Buka email konfirmasi, lalu <a href="/login">masuk</a>.</p>
+    </AuthShell>
+  );
   return (
-    <main className="main" style={{ margin: "10vh auto" }}>
-      <h1 style={{ color: "var(--primary)" }}>Daftar</h1>
-      <form className="stack" onSubmit={submit}>
-        <input placeholder="Nama lengkap" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Kata sandi (min. 8 karakter)" value={password} onChange={(e) => setPassword(e.target.value)} required />
+    <AuthShell mode="register">
+      <h1>Buat akun</h1>
+      <p className="muted">Daftar lalu buat bisnis pertama Anda.</p>
+      <form className="form" onSubmit={submit}>
+        <label>Nama lengkap
+          <input placeholder="Nama Anda" value={name} onChange={(e) => setName(e.target.value)} required />
+        </label>
+        <label>Email
+          <input type="email" placeholder="nama@bisnis.id" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+        <label>Kata sandi
+          <input type="password" placeholder="Minimal 8 karakter" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </label>
         {error && <div className="err">{error}</div>}
         <button className="primary">Buat akun</button>
-        <a href="/login">Sudah punya akun? Masuk</a>
       </form>
-    </main>
+      <p className="alt">Sudah punya akun? <a href="/login">Masuk</a></p>
+    </AuthShell>
   );
 }

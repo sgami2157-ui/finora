@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import AuthShell from "@/components/AuthShell";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,17 +30,22 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="main" style={{ margin: "10vh auto" }}>
-      <h1 style={{ color: "var(--primary)" }}>FINORA</h1>
-      <form className="stack" onSubmit={submit}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Kata sandi" value={password} onChange={(e) => setPassword(e.target.value)} required />
+    <AuthShell mode="login">
+      <h1>Masuk ke FINORA</h1>
+      <p className="muted">Masuk untuk melanjutkan pembukuan Anda.</p>
+      <form className="form" onSubmit={submit}>
+        <label>Email
+          <input type="email" placeholder="nama@bisnis.id" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </label>
+        <label>Kata sandi
+          <input type="password" placeholder="Masukkan kata sandi" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </label>
         {error && <div className="err">{error}</div>}
         {info && <div className="pos">{info}</div>}
         <button className="primary" disabled={busy}>{busy ? "Memproses…" : "Masuk"}</button>
-        <button type="button" onClick={recover}>Lupa kata sandi</button>
-        <a href="/register">Belum punya akun? Daftar</a>
+        <button type="button" className="ghost" onClick={recover}>Lupa kata sandi</button>
       </form>
-    </main>
+      <p className="alt">Belum punya akun? <a href="/register">Daftar</a></p>
+    </AuthShell>
   );
 }
