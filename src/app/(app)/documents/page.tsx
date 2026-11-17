@@ -1,7 +1,8 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { getBusiness } from "@/lib/data";
 import { fmtDate } from "@/lib/format";
-import { DOC_CATEGORIES, DocRowActions, UploadForm } from "@/components/DocumentForms";
+import { DocRowActions, UploadForm } from "@/components/DocumentForms";
+import { DOC_CATEGORIES } from "@/lib/doc-categories";
 import { Badge, Callout, Empty, PageHead, Panel } from "@/components/ui";
 
 type D = { id: string; category: string; file_name: string; mime_type: string; size_bytes: number | string; storage_path: string | null; created_at: string };

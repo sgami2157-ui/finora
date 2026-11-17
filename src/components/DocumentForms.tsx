@@ -3,11 +3,8 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { friendlyError } from "@/lib/friendly";
+import { DOC_CATEGORIES } from "@/lib/doc-categories";
 
-export const DOC_CATEGORIES: [string, string][] = [
-  ["receipt", "Struk / bukti pembayaran"], ["invoice", "Faktur / nota"], ["transfer_proof", "Bukti transfer"],
-  ["supplier_doc", "Dokumen pemasok"], ["customer_doc", "Dokumen pelanggan"], ["report", "Laporan"], ["other", "Lainnya"],
-];
 const ALLOWED = ["application/pdf", "image/jpeg", "image/png", "image/webp", "text/csv", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
 const MAX = 10 * 1024 * 1024;
 
