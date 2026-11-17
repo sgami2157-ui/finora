@@ -1,9 +1,13 @@
 import { revalidatePath } from "next/cache";
 import { supabaseServer } from "@/lib/supabase/server";
-import { getBusiness, getBalances, getMonthly, idr, sumBy, monthRange } from "@/lib/data";
-import { fmtDate } from "@/lib/format";
+import { getBusiness, getBalances, getMonthly, getPeriods, GRAN_COUNT, idr, sumBy, monthRange, type Gran } from "@/lib/data";
+import { fmtDate, greeting, todayJakarta } from "@/lib/format";
+import { toCents } from "@/lib/accounting/money";
+import CashflowChart from "@/components/CashflowChart";
+import HideToggle from "@/components/HideToggle";
 import MonthlyChart from "@/components/MonthlyChart";
-import { Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
+import { Badge, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
+import { payState } from "@/components/InvoiceModule";
 import { Insights } from "@/components/Insights";
 import { loadHealth } from "@/lib/health";
 import { Icon } from "@/components/Icon";
@@ -24,7 +28,12 @@ function delta(cur: number, prev: number) {
   return { text: `${pct >= 0 ? "▲" : "▼"} ${Math.abs(Math.round(pct))}% vs bulan lalu`, up: pct >= 0 };
 }
 
-export default async function Dashboard() {
+const RANGES: [Gran, string][] = [["day", "Harian"], ["week", "Mingguan"], ["month", "Bulanan"], ["year", "Tahunan"]];
+const KIND: Record<string, string> = { sale: "Penjualan", purchase: "Pembelian", expense: "Biaya" };
+
+export default async function Dashboard({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
+  const sp = await searchParams;
+  const gran: Gran = RANGES.some(([k]) => k === sp.range) ? (sp.range as Gran) : "month";
   const biz = await getBusiness();
   if (!biz) {
     return (
@@ -44,11 +53,23 @@ export default async function Dashboard() {
   const { from, to } = monthRange();
   const sb = await supabaseServer();
   const cnt = (type: string) => sb.from("invoices").select("id", { count: "exact", head: true }).eq("business_id", biz.id).eq("type", type).is("deleted_at", null);
-  const [month, all, series, nSale, nExp, nCash] = await Promise.all([
+  const [month, all, series, nSale, nExp, nCash, periodsAll, recentRes, userRes] = await Promise.all([
     getBalances(biz.id, from, to), getBalances(biz.id, null, to), getMonthly(biz.id, 6),
     cnt("sale"), cnt("expense"),
     sb.from("accounts").select("id", { count: "exact", head: true }).eq("business_id", biz.id).eq("is_active", true).or("code.like.1-11%,code.like.1-12%"),
+    getPeriods(biz.id, gran),
+    sb.from("invoices").select("id,type,number,issue_date,due_date,total,paid,notes").eq("business_id", biz.id).is("deleted_at", null).order("issue_date", { ascending: false }).order("created_at", { ascending: false }).limit(6),
+    sb.auth.getUser(),
   ]);
+  const meta = (userRes.data?.user?.user_metadata ?? {}) as { full_name?: string; name?: string };
+  const who = meta.full_name || meta.name || (userRes.data?.user?.email ?? "").split("@")[0] || "";
+  const n = GRAN_COUNT[gran];
+  const cur = periodsAll.slice(-n), prevP = periodsAll.slice(0, -n);
+  const tot = (a: typeof cur, f: (x: (typeof cur)[number]) => number) => a.reduce((t, x) => t + f(x), 0);
+  const cfRev = tot(cur, (x) => x.revenue), cfExp = tot(cur, (x) => x.cogs + x.expense), cfNet = tot(cur, (x) => x.cashNet);
+  const dCf = delta(cfRev, tot(prevP, (x) => x.revenue));
+  const recent = (recentRes.data ?? []) as { id: string; type: string; number: string; issue_date: string; due_date: string | null; total: number | string; paid: number | string; notes: string | null }[];
+  const todayStr = todayJakarta();
   const health = await loadHealth(biz.id, { series });
   const steps = [
     { done: (nCash.count ?? 0) > 1, t: "Tambah rekening kas/bank", s: "Tempat uang usaha Anda disimpan. Boleh dengan saldo awal.", href: "/cash" },
@@ -77,16 +98,19 @@ export default async function Dashboard() {
 
   return (
     <>
-      <PageHead title="Dashboard" desc={`${biz.name} · ${fmtDate(from)} – ${fmtDate(to)} · dari jurnal yang sudah diposting`}>
-        <a className="btn primary" href="/sales"><Icon name="plus" size={16} />Penjualan</a>
-        <a className="btn ghost" href="/expenses"><Icon name="plus" size={16} />Biaya</a>
+      <PageHead title={`${greeting()}${who ? ", " + who : ""}`} desc={`${biz.name} · Periode ${fmtDate(from)} – ${fmtDate(to)}`}>
+        <HideToggle />
+        <details className="bell">
+          <summary aria-label="Pemberitahuan" title="Pemberitahuan">🔔{health.insights.length > 0 && <b>{health.insights.length}</b>}</summary>
+          <div className="bell-body"><strong>Pemberitahuan</strong><Insights items={health.insights} limit={5} /></div>
+        </details>
       </PageHead>
 
       <Panel className="summary">
         <p className="summary-text">
-          Bulan ini usaha Anda {net >= 0 ? "untung" : "rugi"} <strong className={net >= 0 ? "pos" : "neg"}>{idr(Math.abs(net))}</strong>
+          Bulan ini usaha Anda {net >= 0 ? "untung" : "rugi"} <strong className={`amt ${net >= 0 ? "pos" : "neg"}`}>{idr(Math.abs(net))}</strong>
           {revenue > 0 ? <> dari penjualan {idr(revenue)}</> : <> (belum ada penjualan tercatat)</>}.
-          {" "}Uang di kas &amp; bank saat ini <strong>{idr(kas + bank)}</strong>.
+          {" "}Uang di kas &amp; bank saat ini <strong className="amt">{idr(kas + bank)}</strong>.
         </p>
       </Panel>
 
@@ -108,9 +132,17 @@ export default async function Dashboard() {
       </div>
 
       <div className="split wide-left">
-        <Panel title="Pendapatan vs biaya" desc="6 bulan terakhir">
-          {series.some((p) => p.revenue || p.cogs || p.expense)
-            ? <MonthlyChart points={series} />
+        <Panel title="Arus kas" desc={`${RANGES.find(([k]) => k === gran)![1]} · ${n} periode terakhir`}
+          action={<nav className="chips tight" aria-label="Rentang grafik">{RANGES.map(([k, l]) => <a key={k} href={`/dashboard?range=${k}`} className={gran === k ? "on" : ""} aria-current={gran === k ? "true" : undefined}>{l}</a>)}</nav>}>
+          {periodsAll.some((p) => p.revenue || p.cogs || p.expense || p.cashNet)
+            ? <>
+                <div className="cf-sum">
+                  <div><small>Pendapatan</small><strong className="amt">{idr(cfRev)}</strong>{dCf && <em className={dCf.up ? "pos" : "neg"}>{dCf.text.replace("bulan lalu", "periode lalu")}</em>}</div>
+                  <div><small>Pengeluaran</small><strong className="amt">{idr(cfExp)}</strong></div>
+                  <div><small>Arus kas bersih</small><strong className={`amt ${cfNet >= 0 ? "pos" : "neg"}`}>{idr(cfNet)}</strong></div>
+                </div>
+                <CashflowChart points={cur} gran={gran} />
+              </>
             : <Empty icon="chart" title="Belum ada data untuk grafik" desc="Grafik terisi otomatis setelah ada penjualan atau biaya yang tercatat." />}
         </Panel>
         <div className="stack">
@@ -119,8 +151,8 @@ export default async function Dashboard() {
           </Panel>
           <Panel title="Piutang & utang">
             <div className="duo">
-              <a href="/receivables" className="duo-item"><small><Term tip="Uang pelanggan yang belum dibayarkan kepada Anda.">Piutang</Term></small><strong>{idr(ar)}</strong></a>
-              <a href="/payables" className="duo-item"><small><Term tip="Tagihan yang masih harus Anda bayar ke pemasok.">Utang</Term></small><strong>{idr(ap)}</strong></a>
+              <a href="/receivables" className="duo-item"><small><Term tip="Uang pelanggan yang belum dibayarkan kepada Anda.">Piutang</Term></small><strong className="amt">{idr(ar)}</strong></a>
+              <a href="/payables" className="duo-item"><small><Term tip="Tagihan yang masih harus Anda bayar ke pemasok.">Utang</Term></small><strong className="amt">{idr(ap)}</strong></a>
             </div>
           </Panel>
           <Panel title="Biaya terbesar bulan ini">
@@ -136,6 +168,30 @@ export default async function Dashboard() {
             )}
           </Panel>
         </div>
+      </div>
+      <div className="split even mt">
+        <Panel title="Transaksi terbaru" action={<a className="btn ghost sm" href="/transactions">Lihat semua</a>}>
+          {recent.length === 0 ? <Empty icon="transfer" title="Belum ada transaksi" desc="Transaksi pertama Anda akan muncul di sini." /> : (
+            <ul className="txn">
+              {recent.map((i) => {
+                const st = payState(toCents(Number(i.total)), toCents(Number(i.paid)), i.due_date, todayStr);
+                return (
+                  <li key={i.id}>
+                    <div><strong>{i.notes || KIND[i.type] || i.type}</strong><small>{fmtDate(i.issue_date)} · {KIND[i.type] ?? i.type} · <span className="mono">{i.number}</span></small></div>
+                    <div className="txn-r"><span className="amt">{i.type === "sale" ? "+" : "−"} {idr(toCents(Number(i.total)))}</span><Badge tone={st.tone}>{st.label}</Badge></div>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </Panel>
+        <Panel title="Aksi cepat">
+          <div className="qa">
+            {([["/sales", "cart", "Tambah penjualan"], ["/purchases", "bag", "Tambah pembelian"], ["/expenses", "wallet", "Tambah pengeluaran"], ["/receivables", "coin", "Terima pembayaran"], ["/cash", "transfer", "Transfer kas"], ["/journal", "book", "Buat jurnal"]] as const).map(([h, ic, l]) => (
+              <a key={h} href={h}><span className="kpi-ico"><Icon name={ic} size={18} /></span>{l}</a>
+            ))}
+          </div>
+        </Panel>
       </div>
     </>
   );

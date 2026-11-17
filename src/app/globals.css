@@ -330,3 +330,68 @@ tbody td { padding: 13px 12px; vertical-align: top; } tbody tr { transition: bac
 .lines { display: grid; gap: 10px; } .line { display: grid; gap: 8px; grid-template-columns: 2fr 1fr 1fr auto; align-items: end; } .line-sub { font-size: 13px; color: var(--muted); }
 @media (max-width: 600px) { .line { grid-template-columns: 1fr 1fr; } }
 .inline-edit { display: inline-flex; gap: 6px; align-items: center; }
+
+/* ---------- redesign: shell premium, dashboard, privasi ---------- */
+:root { --bg: #111318; --sidebar: #191c23; --card: #20242d; --text: #f5f6f8; --muted: #9299a8; --warn: #f59e0b; }
+html[data-hide="1"] .amt, html[data-hide="1"] td.num { filter: blur(7px); user-select: none; }
+.amt, td.num { transition: filter .2s; font-variant-numeric: tabular-nums; }
+.shell { transition: grid-template-columns .28s ease; grid-template-columns: 240px minmax(0, 1fr); }
+.nav-group { display: grid; gap: 2px; margin-bottom: 10px; }
+.nav-title { margin: 8px 12px 4px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--secondary); }
+.brand-row { display: flex; align-items: center; gap: 8px; justify-content: space-between; }
+.sb-close { display: none; }
+.sb-collapse { margin-left: auto; padding: 4px 10px; min-height: 32px; }
+.me { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: rgba(255,255,255,.04); margin-bottom: 4px; }
+.avatar { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #1a1006; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; }
+.me-t { font-size: 12px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+@media (min-width: 801px) {
+  html[data-sb="collapsed"] .shell { grid-template-columns: 72px minmax(0, 1fr); }
+  html[data-sb="collapsed"] .sidebar { padding-inline: 10px; overflow-x: hidden; }
+  html[data-sb="collapsed"] .nav-t small, html[data-sb="collapsed"] .nav-title, html[data-sb="collapsed"] .brand small, html[data-sb="collapsed"] .me-t, html[data-sb="collapsed"] .logo-word { display: none; }
+  html[data-sb="collapsed"] .nav-t { font-size: 0; }
+  html[data-sb="collapsed"] .nav a, html[data-sb="collapsed"] .help-link, html[data-sb="collapsed"] .logout { justify-content: center; padding-inline: 0; }
+  html[data-sb="collapsed"] .brand-row { flex-direction: column; }
+  html[data-sb="collapsed"] .sb-collapse { margin: 0; }
+  html[data-sb="collapsed"] .me { justify-content: center; }
+}
+@media (max-width: 1100px) and (min-width: 801px) { .shell { grid-template-columns: 224px minmax(0, 1fr); } }
+@media (max-width: 800px) {
+  .sb-close { display: inline-flex; margin-left: auto; } .sb-collapse { display: none; }
+  .sidebar { width: 100vw; max-width: 100vw; }
+}
+.bell { position: relative; }
+.bell summary { list-style: none; cursor: pointer; min-height: 40px; min-width: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); padding: 0 10px; }
+.bell summary::-webkit-details-marker { display: none; }
+.bell summary b { background: var(--primary); color: #1a1006; border-radius: 999px; font-size: 11px; padding: 1px 6px; }
+.bell-body { position: absolute; right: 0; top: 48px; z-index: 30; width: min(360px, 88vw); max-height: 70vh; overflow: auto; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 14px; box-shadow: var(--shadow); display: grid; gap: 10px; }
+.chips.tight a { padding: 5px 12px; font-size: 13px; }
+.cf-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 8px; }
+.cf-sum small { display: block; color: var(--muted); font-size: 12px; } .cf-sum strong { font-size: clamp(15px, 2.4vw, 20px); } .cf-sum em { display: block; font-style: normal; font-size: 12px; }
+.chart .cf-line { stroke: var(--text); stroke-width: 2; opacity: .85; } .chart .cf-dot { fill: var(--text); }
+.chart .cf-hit { fill: transparent; } .chart .cf-col:hover .cf-hit, .chart .cf-col:focus .cf-hit { fill: rgba(255,255,255,.05); } .chart .cf-col { outline: none; }
+.dot.net { background: var(--text); }
+.txn { list-style: none; margin: 0; padding: 0; display: grid; }
+.txn li { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); min-width: 0; }
+.txn li:last-child { border-bottom: 0; } .txn li > div { min-width: 0; } .txn small { display: block; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.txn strong { display: block; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.txn-r { text-align: right; display: grid; gap: 4px; justify-items: end; flex: none; font-weight: 700; font-size: 14px; }
+.qa { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.qa a { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 14px; border: 1px solid var(--border); font-size: 14px; font-weight: 600; min-height: 48px; }
+.qa a:hover { border-color: var(--primary); }
+.filter .field.grow { flex: 1 1 220px; }
+@media (max-width: 800px) { .cf-sum { grid-template-columns: 1fr 1fr; } .cf-sum > div:last-child { grid-column: 1 / -1; } }
+
+/* ketahanan layout sempit (320px) */
+.split > *, .stack > *, .panel, .kpi, .page-head > * { min-width: 0; }
+.panel-head { flex-wrap: wrap; } .panel-head .chips { margin-bottom: 0; }
+.page-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.kpi-label { overflow-wrap: anywhere; }
+.cf-sum strong, .summary-text { overflow-wrap: anywhere; }
+@media (max-width: 800px) { .cf-sum { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cf-sum small { overflow-wrap: anywhere; } .page-actions .ghost.sm { white-space: normal; text-align: left; } }
+.chart { max-width: 100%; height: auto; }
+.legend { flex-wrap: wrap; gap: 8px 16px; }
+@media (max-width: 800px) { .page-actions { width: 100%; } .page-actions button, .page-actions summary { white-space: normal; } .qa a { min-width: 0; overflow-wrap: anywhere; } }
+@media (max-width: 800px) { .shell, html[data-sb="collapsed"] .shell { grid-template-columns: minmax(0, 1fr); } }
+
+.nav .nav-t { display: grid; padding: 0; min-height: 0; gap: 1px; min-width: 0; }
+.main .split + .split, .main .split + .panel { margin-top: 18px; }

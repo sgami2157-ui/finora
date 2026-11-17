@@ -24,7 +24,7 @@ export function Kpi({
         <span className="kpi-ico"><Icon name={icon} size={18} /></span>
         <span className="kpi-label">{label}</span>
       </div>
-      <strong className={tone ?? ""}>{value}</strong>
+      <strong className={`amt ${tone ?? ""}`}>{value}</strong>
       {hint && <div className="kpi-hint">{hint}</div>}
     </div>
   );

@@ -40,3 +40,9 @@ export function compactIDR(n: number): string {
   if (abs >= 1e3) return f(abs / 1e3, "rb");
   return `${sign}${abs}`;
 }
+
+/** Sapaan menurut jam Jakarta. */
+export function greeting(d = new Date()): string {
+  const h = Number(new Intl.DateTimeFormat("en-GB", { hour: "2-digit", hour12: false, timeZone: "Asia/Jakarta" }).format(d)) % 24;
+  return h < 11 ? "Selamat pagi" : h < 15 ? "Selamat siang" : h < 18 ? "Selamat sore" : "Selamat malam";
+}

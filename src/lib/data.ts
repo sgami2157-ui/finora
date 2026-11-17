@@ -57,3 +57,17 @@ export async function getMonthly(businessId: string, months = 6): Promise<MonthP
     month: r.month, revenue: toCents(Number(r.revenue)), cogs: toCents(Number(r.cogs)), expense: toCents(Number(r.expense)),
   }));
 }
+
+export type Gran = "day" | "week" | "month" | "year";
+export type PeriodPoint = { period: string; revenue: number; cogs: number; expense: number; cashNet: number };
+export const GRAN_COUNT: Record<Gran, number> = { day: 14, week: 8, month: 6, year: 3 };
+
+/** Ringkasan per hari/minggu/bulan/tahun (sen), terlama → terbaru. Mengambil 2x periode agar bisa dibandingkan. */
+export async function getPeriods(businessId: string, gran: Gran): Promise<PeriodPoint[]> {
+  const sb = await supabaseServer();
+  const { data, error } = await sb.rpc("period_summary", { p_business: businessId, p_gran: gran, p_periods: GRAN_COUNT[gran] * 2 });
+  if (error) throw new Error(error.message);
+  return (data as { period: string; revenue: number | string; cogs: number | string; expense: number | string; cash_net: number | string }[]).map((r) => ({
+    period: r.period, revenue: toCents(Number(r.revenue)), cogs: toCents(Number(r.cogs)), expense: toCents(Number(r.expense)), cashNet: toCents(Number(r.cash_net)),
+  }));
+}
