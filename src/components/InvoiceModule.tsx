@@ -3,7 +3,9 @@ import { getBusiness, getCashAccounts, idr, monthRange } from "@/lib/data";
 import { toCents } from "@/lib/accounting/money";
 import { daysBetween, fmtDate, todayJakarta } from "@/lib/format";
 import InvoiceForm, { type Kind } from "./InvoiceForm";
-import { Badge, Empty, Kpi, PageHead, Panel } from "./ui";
+import SaleItemsForm from "./SaleItemsForm";
+import SaleSwitcher from "./SaleSwitcher";
+import { Badge, Callout, Empty, Kpi, PageHead, Panel } from "./ui";
 import type { IconName } from "./Icon";
 
 type Inv = {
@@ -43,7 +45,7 @@ export default async function InvoiceModule({ kind }: { kind: Kind }) {
   const { from, to } = monthRange();
   const partyTable = kind === "sale" ? "customers" : "suppliers";
 
-  const [cashAccounts, accRes, listRes, monthRes, openRes, partyRes] = await Promise.all([
+  const [cashAccounts, accRes, listRes, monthRes, openRes, partyRes, prodRes] = await Promise.all([
     getCashAccounts(biz.id),
     sb.from("accounts").select("id,code,name,type").eq("business_id", biz.id).eq("is_active", true).order("code"),
     sb.from("invoices").select("id,number,issue_date,due_date,total,paid,notes,customer_id,supplier_id")
@@ -52,7 +54,12 @@ export default async function InvoiceModule({ kind }: { kind: Kind }) {
     sb.from("invoices").select("total").eq("business_id", biz.id).eq("type", kind).is("deleted_at", null).gte("issue_date", from).lte("issue_date", to),
     sb.from("invoices").select("total,paid").eq("business_id", biz.id).eq("type", kind).is("deleted_at", null),
     sb.from(partyTable).select("id,name").eq("business_id", biz.id).is("deleted_at", null).order("name").limit(500),
+    kind === "sale"
+      ? sb.from("products").select("id,name,sell_price,stock_qty").eq("business_id", biz.id).is("deleted_at", null).order("name").limit(500)
+      : Promise.resolve({ data: [] as unknown[] }),
   ]);
+  const products = ((prodRes.data ?? []) as { id: string; name: string; sell_price: number | string; stock_qty: number | string }[])
+    .map((p) => ({ id: p.id, name: p.name, sell_price: Number(p.sell_price), stock_qty: Number(p.stock_qty) }));
 
   const accounts = ((accRes.data ?? []) as { id: string; code: string; name: string; type: string }[]).filter((a) =>
     kind === "purchase"
@@ -70,6 +77,11 @@ export default async function InvoiceModule({ kind }: { kind: Kind }) {
   return (
     <>
       <PageHead title={cfg.title} desc={cfg.desc} />
+      {kind === "purchase" && (
+        <Callout title="Membeli barang untuk dijual lagi?">
+          Gunakan <a href="/products">Produk &amp; Persediaan → Tambah stok</a> agar stok dan modal barang (HPP) terhitung otomatis. Halaman ini untuk pembelian lain, misalnya peralatan.
+        </Callout>
+      )}
       <div className="kpis">
         <Kpi label={cfg.monthLabel} value={idr(monthTotal)} icon={cfg.icon} tone="pri" hint={`${monthRes.data?.length ?? 0} transaksi`} />
         <Kpi label={cfg.openLabel} value={idr(open)} icon="clock" tone={open > 0 ? undefined : "pos"} hint={open > 0 ? "Menunggu pelunasan" : "Semua lunas"} />
@@ -77,7 +89,14 @@ export default async function InvoiceModule({ kind }: { kind: Kind }) {
 
       <div className="split">
         <Panel title={cfg.formTitle}>
-          <InvoiceForm kind={kind} businessId={biz.id} cashAccounts={cashAccounts} accounts={accounts} parties={parties.map((p) => p.name)} />
+          {kind === "sale" && products.some((p) => p.stock_qty > 0) ? (
+            <SaleSwitcher
+              items={<SaleItemsForm businessId={biz.id} products={products} cashAccounts={cashAccounts} parties={parties.map((p) => p.name)} />}
+              plain={<InvoiceForm kind={kind} businessId={biz.id} cashAccounts={cashAccounts} accounts={accounts} parties={parties.map((p) => p.name)} />}
+            />
+          ) : (
+            <InvoiceForm kind={kind} businessId={biz.id} cashAccounts={cashAccounts} accounts={accounts} parties={parties.map((p) => p.name)} />
+          )}
         </Panel>
         <Panel title="Riwayat" desc="100 transaksi terbaru">
           {invoices.length === 0 ? (

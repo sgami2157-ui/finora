@@ -25,6 +25,8 @@ const P: Record<string, ReactNode> = {
   check: (<><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></>),
   arrow: (<><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>),
   trend: (<><path d="m22 7-8.5 8.5-5-5L2 17" /><path d="M16 7h6v6" /></>),
+  help: (<><circle cx="12" cy="12" r="10" /><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" /><path d="M12 17h.01" /></>),
+  menu: (<><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></>),
   plus: (<><path d="M12 5v14" /><path d="M5 12h14" /></>),
   clock: (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
   alert: (<><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></>),

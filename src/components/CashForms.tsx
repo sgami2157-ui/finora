@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { friendlyError } from "@/lib/friendly";
 import { todayJakarta } from "@/lib/format";
 import { MoneyInput } from "./MoneyInput";
 
@@ -28,7 +29,7 @@ export function NewCashAccountForm({ businessId }: { businessId: string }) {
       p_account_number: kind === "bank" ? number : null, p_opening: Number(opening) || 0, p_date: date,
     });
     setBusy(false);
-    if (err) return setError(err.message);
+    if (err) return setError(friendlyError(err.message));
     setOk(true); setName(""); setBankName(""); setNumber(""); setOpening("");
     router.refresh();
   }
@@ -81,7 +82,7 @@ export function TransferForm({ businessId, accounts }: { businessId: string; acc
       p_business: businessId, p_from: from, p_to: to, p_amount: n, p_date: date,
     });
     setBusy(false);
-    if (err) return setError(err.message);
+    if (err) return setError(friendlyError(err.message));
     setOk(true); setAmount("");
     router.refresh();
   }

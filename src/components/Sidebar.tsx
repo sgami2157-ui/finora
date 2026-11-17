@@ -4,21 +4,21 @@ import { usePathname, useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Icon, Logo, type IconName } from "./Icon";
 
-// Hanya modul yang benar-benar berfungsi yang berupa tautan. Sisanya ditandai jelas "segera".
-const NAV: { label: string; icon: IconName; href?: string }[] = [
+// Semua menu kini berfungsi. Item tanpa href (jika ada) ditandai "segera".
+const NAV: { label: string; icon: IconName; href?: string; sub?: string }[] = [
   { label: "Dashboard", icon: "dashboard", href: "/dashboard" },
   { label: "Transaksi", icon: "transfer", href: "/transactions" },
-  { label: "Jurnal Akuntansi", icon: "book", href: "/journal" },
+  { label: "Jurnal Akuntansi", icon: "book", href: "/journal", sub: "Catatan akuntansi lengkap" },
   { label: "Kas & Bank", icon: "bank", href: "/cash" },
   { label: "Penjualan", icon: "cart", href: "/sales" },
   { label: "Pembelian", icon: "bag", href: "/purchases" },
-  { label: "Produk & Persediaan", icon: "box" },
-  { label: "Piutang", icon: "coin", href: "/receivables" },
-  { label: "Utang", icon: "banknote", href: "/payables" },
+  { label: "Produk & Persediaan", icon: "box", href: "/products", sub: "Barang dan stoknya" },
+  { label: "Piutang", icon: "coin", href: "/receivables", sub: "Pelanggan yang belum bayar" },
+  { label: "Utang", icon: "banknote", href: "/payables", sub: "Tagihan yang harus Anda bayar" },
   { label: "Biaya Operasional", icon: "wallet", href: "/expenses" },
-  { label: "Laporan Keuangan", icon: "chart", href: "/reports" },
-  { label: "AI Financial Analyst", icon: "sparkles" },
-  { label: "Dokumen", icon: "folder" },
+  { label: "Laporan Keuangan", icon: "chart", href: "/reports", sub: "Untung/rugi dan kekayaan usaha" },
+  { label: "AI Financial Analyst", icon: "sparkles", href: "/ai", sub: "Tanya kondisi usaha Anda" },
+  { label: "Dokumen", icon: "folder", href: "/documents", sub: "Simpan struk dan nota" },
   { label: "Pengaturan", icon: "settings", href: "/settings" },
 ];
 
@@ -62,7 +62,7 @@ export default function Sidebar({ businessName }: { businessName: string | null 
               const active = !!n.href && (pathname === n.href || pathname.startsWith(n.href + "/"));
               return n.href ? (
                 <a key={n.label} href={n.href} className={active ? "active" : ""} aria-current={active ? "page" : undefined}>
-                  <Icon name={n.icon} />{n.label}
+                  <Icon name={n.icon} /><span className="nav-t">{n.label}{n.sub && <small>{n.sub}</small>}</span>
                 </a>
               ) : (
                 <span key={n.label} title="Belum tersedia di versi ini"><Icon name={n.icon} />{n.label}<em>segera</em></span>
@@ -70,8 +70,18 @@ export default function Sidebar({ businessName }: { businessName: string | null 
             })}
           </nav>
         </div>
-        <button className="logout" onClick={logout}><Icon name="logout" />Keluar</button>
+        <div className="sb-bottom">
+          <a href="/help" className={`help-link ${pathname === "/help" ? "active" : ""}`}><Icon name="help" />Pusat Bantuan</a>
+          <button className="logout" onClick={logout}><Icon name="logout" />Keluar</button>
+        </div>
       </aside>
+      <nav className="bottom-nav" aria-label="Menu cepat">
+        <a href="/dashboard" className={pathname === "/dashboard" ? "on" : ""}><Icon name="dashboard" size={22} /><span>Beranda</span></a>
+        <a href="/sales" className={pathname.startsWith("/sales") ? "on" : ""}><Icon name="cart" size={22} /><span>Penjualan</span></a>
+        <button type="button" className="bn-add" onClick={() => window.dispatchEvent(new Event("finora:quickadd"))} aria-label="Catat transaksi"><Icon name="plus" size={26} /></button>
+        <a href="/cash" className={pathname.startsWith("/cash") ? "on" : ""}><Icon name="bank" size={22} /><span>Kas</span></a>
+        <button type="button" onClick={() => setOpen(true)} aria-label="Buka semua menu"><Icon name="menu" size={22} /><span>Menu</span></button>
+      </nav>
     </>
   );
 }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { friendlyError } from "@/lib/friendly";
 import { todayJakarta } from "@/lib/format";
 import { MoneyInput } from "./MoneyInput";
 
@@ -37,7 +38,7 @@ export default function PayForm({
       p_invoice: invoiceId, p_cash_account: cash, p_amount: n, p_date: date,
     });
     setBusy(false);
-    if (err) return setError(err.message);
+    if (err) return setError(friendlyError(err.message));
     setOpen(false);
     router.refresh();
   }

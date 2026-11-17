@@ -67,3 +67,28 @@ export function Badge({ tone = "muted", children }: { tone?: "pos" | "neg" | "pr
 export function LinkButton({ href, children, primary }: { href: string; children: ReactNode; primary?: boolean }) {
   return <a href={href} className={`btn ${primary ? "primary" : "ghost"}`}>{children}</a>;
 }
+
+/** Penjelasan singkat istilah: tanda tanya yang bisa diketuk (tanpa JavaScript). */
+export function Tip({ children, label = "Apa artinya?" }: { children: ReactNode; label?: string }) {
+  return (
+    <details className="tip">
+      <summary aria-label={label} title={label}>?</summary>
+      <div className="tip-body" role="note">{children}</div>
+    </details>
+  );
+}
+
+/** Judul dengan penjelasan istilah di sebelahnya. */
+export function Term({ children, tip }: { children: ReactNode; tip: ReactNode }) {
+  return <span className="term">{children}<Tip>{tip}</Tip></span>;
+}
+
+/** Kotak petunjuk berbahasa sederhana di atas halaman. */
+export function Callout({ title, children, tone = "info" }: { title?: string; children: ReactNode; tone?: "info" | "warn" }) {
+  return (
+    <div className={`callout ${tone}`} role="note">
+      {title && <strong>{title}</strong>}
+      <div>{children}</div>
+    </div>
+  );
+}

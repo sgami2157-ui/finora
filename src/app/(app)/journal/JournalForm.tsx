@@ -1,4 +1,5 @@
 "use client";
+import { friendlyError } from "@/lib/friendly";
 import { todayJakarta } from "@/lib/format";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -36,7 +37,7 @@ export default function JournalForm({ businessId, accounts }: { businessId: stri
       })),
     });
     setBusy(false);
-    if (error) return setError(error.message);
+    if (error) return setError(friendlyError(error.message));
     setDescription(""); setLines([empty(), empty()]);
     router.refresh();
   }

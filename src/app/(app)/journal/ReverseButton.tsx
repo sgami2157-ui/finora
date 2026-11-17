@@ -1,4 +1,5 @@
 "use client";
+import { friendlyError } from "@/lib/friendly";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -11,7 +12,7 @@ export default function ReverseButton({ id }: { id: string }) {
     setBusy(true);
     const { error } = await supabaseBrowser().rpc("reverse_journal_entry", { p_entry: id });
     setBusy(false);
-    if (error) alert(error.message); else router.refresh();
+    if (error) alert(friendlyError(error.message)); else router.refresh();
   }
   return <button onClick={run} disabled={busy}>Balik</button>;
 }
