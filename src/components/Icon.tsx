@@ -25,6 +25,10 @@ const P: Record<string, ReactNode> = {
   check: (<><circle cx="12" cy="12" r="10" /><path d="m9 12 2 2 4-4" /></>),
   arrow: (<><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></>),
   trend: (<><path d="m22 7-8.5 8.5-5-5L2 17" /><path d="M16 7h6v6" /></>),
+  plus: (<><path d="M12 5v14" /><path d="M5 12h14" /></>),
+  clock: (<><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>),
+  alert: (<><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" /><path d="M12 9v4" /><path d="M12 17h.01" /></>),
+  inbox: (<><path d="M22 12h-6l-2 3h-4l-2-3H2" /><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z" /></>),
 };
 
 export type IconName = keyof typeof P;

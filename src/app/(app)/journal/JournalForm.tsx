@@ -1,4 +1,5 @@
 "use client";
+import { todayJakarta } from "@/lib/format";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -9,7 +10,7 @@ const empty = (): Line => ({ account_id: "", debit: "", credit: "" });
 
 export default function JournalForm({ businessId, accounts }: { businessId: string; accounts: Acc[] }) {
   const router = useRouter();
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayJakarta();
   const [date, setDate] = useState(today);
   const [description, setDescription] = useState("");
   const [lines, setLines] = useState<Line[]>([empty(), empty()]);

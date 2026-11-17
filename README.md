@@ -27,7 +27,7 @@ npm run dev
 
 ## Database
 1. Buat project Supabase **staging** terlebih dahulu.
-2. Terapkan `supabase/migrations/0001..0003` berurutan (`supabase db push` atau SQL editor).
+2. Terapkan `supabase/migrations/0001..0005` berurutan (`supabase db push` atau SQL editor).
 3. Jalankan `supabase/tests/rls_test.sql` di staging — harus mencetak `SEMUA TES RLS & JURNAL LULUS`.
 4. Authentication → aktifkan Email; atur Site URL & Redirect URLs ke domain Anda.
 5. Edge Function: `supabase functions deploy ai-analyst` lalu `supabase secrets set ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...`.

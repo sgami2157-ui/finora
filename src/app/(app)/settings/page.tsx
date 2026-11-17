@@ -1,6 +1,8 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { getBusiness } from "@/lib/data";
 import DisconnectButton from "./DisconnectButton";
+import { Badge, Empty, PageHead, Panel } from "@/components/ui";
+import { fmtDate } from "@/lib/format";
 
 const MESSAGES: Record<string, string> = {
   ok: "Google Drive berhasil terhubung dan terverifikasi.",
@@ -10,7 +12,7 @@ const MESSAGES: Record<string, string> = {
 
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ google?: string }> }) {
   const biz = await getBusiness();
-  if (!biz) return <p>Buat bisnis terlebih dahulu di <a href="/dashboard"><u>Dashboard</u></a>.</p>;
+  if (!biz) return <Empty icon="inbox" title="Buat bisnis terlebih dahulu"><a className="btn primary" href="/dashboard">Ke Dashboard</a></Empty>;
   const sp = await searchParams;
   const sb = await supabaseServer();
   const { data: integ } = await sb.from("integrations_public").select("status,external_account,last_verified_at")
@@ -19,19 +21,19 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
 
   return (
     <>
-      <h1>Pengaturan</h1>
-      <h2>{biz.name}</h2>
-      {sp.google && <p className={sp.google === "ok" ? "pos" : "err"}>{MESSAGES[sp.google] ?? sp.google}</p>}
-      <div className="card" style={{ maxWidth: 520 }}>
-        <h3 style={{ marginTop: 0 }}>Google Drive</h3>
-        <p>Status: <b>{verified ? `Terhubung (${integ!.external_account})` : "Belum terhubung"}</b></p>
-        {verified && <p style={{ color: "var(--secondary)" }}>Terakhir diverifikasi: {integ!.last_verified_at}</p>}
-        {verified ? <DisconnectButton businessId={biz.id} /> : <a href={`/api/google/auth?business=${biz.id}`}><button className="primary">Hubungkan Google Drive</button></a>}
-        <p style={{ color: "var(--secondary)", fontSize: 13 }}>Unggah dokumen, simpan laporan, dan backup ke Drive belum diimplementasikan di versi ini.</p>
-      </div>
-      <div className="card" style={{ maxWidth: 520, marginTop: 12 }}>
-        <h3 style={{ marginTop: 0 }}>Macaly Cloud</h3>
-        <p>Status: <b>Belum terverifikasi</b> — lihat docs/MACALY.md.</p>
+      <PageHead title="Pengaturan" desc={biz.name} />
+      {sp.google && <div className={`alert ${sp.google === "ok" ? "ok" : "err"}`} role="status" style={{ marginBottom: 16 }}>{MESSAGES[sp.google] ?? sp.google}</div>}
+      <div className="split even">
+        <Panel title="Google Drive" action={<Badge tone={verified ? "pos" : "muted"}>{verified ? "Terhubung" : "Belum terhubung"}</Badge>}>
+          <div className="form">
+            {verified && <p className="muted sm">Akun: {integ!.external_account} · diverifikasi {fmtDate(integ!.last_verified_at)}</p>}
+            {verified ? <DisconnectButton businessId={biz.id} /> : <a href={`/api/google/auth?business=${biz.id}`}><button className="primary lg">Hubungkan Google Drive</button></a>}
+            <small className="hint">Unggah dokumen, simpan laporan, dan backup ke Drive belum diimplementasikan di versi ini.</small>
+          </div>
+        </Panel>
+        <Panel title="Macaly Cloud" action={<Badge>Belum terverifikasi</Badge>}>
+          <p className="muted sm">Integrasi belum dipakai karena endpoint belum diverifikasi. Lihat docs/MACALY.md.</p>
+        </Panel>
       </div>
     </>
   );
