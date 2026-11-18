@@ -8,8 +8,8 @@ import PushToggle from "@/components/PushToggle";
 
 const MESSAGES: Record<string, string> = {
   ok: "Google Drive berhasil terhubung dan terverifikasi.",
-  ditolak: "Izin Google ditolak.", invalid: "Permintaan tidak valid.", state: "Validasi keamanan (state) gagal.",
-  sesi: "Sesi tidak cocok.", izin: "Hanya owner/admin yang dapat menghubungkan.", gagal: "Gagal menghubungkan Google Drive. Lihat log integrasi.",
+  ditolak: "Izin Google tidak diberikan.", invalid: "Permintaan tidak valid. Coba hubungkan lagi.", state: "Verifikasi keamanan gagal. Coba hubungkan lagi.",
+  sesi: "Sesi Anda tidak cocok. Masuk ulang lalu coba lagi.", izin: "Hanya pemilik atau admin usaha yang dapat menghubungkan Google Drive.", gagal: "Google Drive belum berhasil terhubung. Coba lagi beberapa saat.",
 };
 
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ google?: string }> }) {
@@ -50,9 +50,6 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
         )}
         <Panel title="Notifikasi" desc="Pengingat tagihan jatuh tempo dan stok menipis">
           <PushToggle businessId={biz.id} publicKey={vapid} />
-        </Panel>
-        <Panel title="Macaly Cloud" action={<Badge>Belum terverifikasi</Badge>}>
-          <p className="muted sm">Integrasi belum dipakai karena endpoint belum diverifikasi. Lihat docs/MACALY.md.</p>
         </Panel>
       </div>
     </>

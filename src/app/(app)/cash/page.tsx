@@ -38,7 +38,7 @@ export default async function CashPage() {
 
   return (
     <>
-      <PageHead title="Kas & Bank" desc="Saldo setiap rekening dihitung dari jurnal yang sudah diposting." />
+      <PageHead title="Kas & Bank" desc="Saldo setiap rekening dihitung dari transaksi yang sudah tercatat." />
       <div className="kpis">
         <Kpi label="Total kas & bank" value={idr(total)} icon="wallet" tone="pri" hint={`${accounts.length} rekening aktif`} />
         <Kpi label="Di rekening bank" value={idr(bankTotal)} icon="bank" />

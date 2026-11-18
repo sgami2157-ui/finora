@@ -8,8 +8,8 @@ const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? "FINORA";
 const font = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"], display: "swap", variable: "--font-jakarta" });
 
 export const metadata: Metadata = {
-  title: `${APP_NAME} — Akuntansi & Intelijen Keuangan untuk UMKM`,
-  description: "Pembukuan double-entry, laporan keuangan, dan analisis bisnis dalam Rupiah untuk UMKM Indonesia.",
+  title: `${APP_NAME} — Pembukuan untuk UMKM`,
+  description: "Pembukuan, laporan keuangan, dan analisis bisnis dalam Rupiah untuk UMKM Indonesia.",
   manifest: "/manifest.webmanifest",
   icons: { icon: "/icon-192.png", apple: "/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "FINORA", statusBarStyle: "black-translucent" },

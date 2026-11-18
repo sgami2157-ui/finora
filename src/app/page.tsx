@@ -1,39 +1,39 @@
 import { Icon, Logo, type IconName } from "@/components/Icon";
 
-const FEATURES: { icon: IconName; title: string; desc: string; soon?: boolean }[] = [
-  { icon: "book", title: "Jurnal double-entry", desc: "Debit selalu sama dengan kredit. Jurnal yang sudah diposting tidak bisa diubah — koreksi lewat jurnal pembalik." },
-  { icon: "chart", title: "Laporan keuangan", desc: "Laba rugi, neraca, dan neraca saldo tersusun langsung dari jurnal. Arus kas dan buku besar menyusul." },
-  { icon: "bank", title: "Kas & Bank", desc: "Pantau saldo kas dan rekening, transfer antar-akun, serta rekonsiliasi arus kas.", soon: true },
-  { icon: "coin", title: "Piutang & Utang", desc: "Catat faktur, pembayaran sebagian, dan jatuh tempo agar arus kas tetap terkendali.", soon: true },
-  { icon: "box", title: "Persediaan & HPP", desc: "Harga pokok rata-rata tertimbang, resep produk, dan analisis titik impas (BEP).", soon: true },
-  { icon: "trend", title: "Analisis Bisnis", desc: "Margin, tren 6 bulan, umur piutang dan utang, biaya terbesar, dan margin produk — dihitung langsung dari data Anda." },
+const FEATURES: { icon: IconName; title: string; desc: string }[] = [
+  { icon: "book", title: "Pencatatan yang rapi", desc: "Setiap transaksi tercatat seimbang dan tidak bisa diubah diam-diam. Salah catat? Cukup dibalik, riwayatnya tetap utuh." },
+  { icon: "chart", title: "Laporan otomatis", desc: "Laba rugi, neraca, arus kas, dan buku besar tersusun sendiri dari catatan Anda. Siap dicetak atau disimpan sebagai PDF." },
+  { icon: "bank", title: "Kas & Bank", desc: "Pantau saldo kas dan rekening, serta pindahkan dana antar-akun dengan mudah." },
+  { icon: "coin", title: "Piutang & Utang", desc: "Catat faktur, pembayaran bertahap, dan tanggal jatuh tempo. Pengingat membantu Anda tidak terlewat." },
+  { icon: "box", title: "Stok & Harga Pokok", desc: "Stok masuk dan keluar tercatat, modal barang dihitung otomatis, dan Anda diberi tahu saat stok menipis." },
+  { icon: "trend", title: "Analisis Bisnis", desc: "Lihat margin, tren 6 bulan, umur piutang dan utang, serta biaya terbesar — langsung dari data usaha Anda." },
 ];
 
-const MODULES: [string, IconName, boolean][] = [
-  ["Dashboard", "dashboard", true], ["Transaksi", "transfer", false], ["Jurnal Akuntansi", "book", true], ["Kas & Bank", "bank", false],
-  ["Penjualan", "cart", false], ["Pembelian", "bag", false], ["Produk & Persediaan", "box", false], ["Piutang", "coin", false],
-  ["Utang", "banknote", false], ["Biaya Operasional", "wallet", false], ["Laporan Keuangan", "chart", true], ["Analisis Bisnis", "trend", false],
-  ["Dokumen", "folder", false], ["Pengaturan", "settings", true],
+const MODULES: [string, IconName][] = [
+  ["Dashboard", "dashboard"], ["Transaksi", "transfer"], ["Jurnal", "book"], ["Kas & Bank", "bank"],
+  ["Penjualan", "cart"], ["Pembelian", "bag"], ["Produk & Stok", "box"], ["Piutang", "coin"],
+  ["Utang", "banknote"], ["Biaya", "wallet"], ["Laporan", "chart"], ["Analisis", "trend"],
+  ["Dokumen", "folder"], ["Pengaturan", "settings"],
 ];
 
 const STEPS = [
-  ["01", "Buat bisnis", "Daftar akun lalu buat bisnis pertama Anda. Data setiap bisnis terpisah dan aman."],
-  ["02", "Catat jurnal", "Input transaksi sebagai jurnal. Sistem memvalidasi debit = kredit sebelum diposting."],
-  ["03", "Baca laporan", "Lihat laba rugi, neraca, dan neraca saldo kapan saja, dihitung dari jurnal posted."],
+  ["01", "Daftar dan buat usaha", "Buat akun lalu isi nama usaha Anda. Data tiap usaha terpisah dan aman."],
+  ["02", "Catat penjualan, pembelian, dan biaya", "Cukup isi formulir sederhana. Pembukuan disusun otomatis di belakang layar."],
+  ["03", "Baca laporan", "Lihat untung rugi dan kondisi keuangan usaha kapan saja, di HP maupun komputer."],
 ];
 
 const SECURITY: [IconName, string, string][] = [
-  ["lock", "Jurnal permanen", "Jurnal posted tidak bisa diedit atau dihapus."],
-  ["calcheck", "Kunci periode", "Cegah perubahan setelah tutup buku."],
-  ["shield", "Row Level Security", "Data tiap bisnis terisolasi di database."],
-  ["clipcheck", "Jejak audit", "Setiap perubahan penting tercatat."],
+  ["lock", "Catatan permanen", "Transaksi yang sudah dicatat tidak bisa dihapus diam-diam."],
+  ["calcheck", "Riwayat perubahan", "Setiap perubahan penting tercatat dan bisa ditelusuri."],
+  ["shield", "Data terpisah", "Hanya Anda dan orang yang Anda undang yang bisa melihat data usaha."],
+  ["clipcheck", "Cadangan ke Google Drive", "Simpan salinan data usaha Anda ke Drive sendiri kapan saja."],
 ];
 
 const PRINCIPLES: [IconName, string, string][] = [
-  ["scale", "Double-entry", "Debit = kredit, selalu."],
-  ["lock", "Jurnal terkunci", "Posted tidak bisa diubah."],
-  ["shield", "Data terisolasi", "RLS per bisnis."],
-  ["banknote", "Rupiah & WIB", "Format lokal bawaan."],
+  ["scale", "Selalu seimbang", "Setiap catatan dicek otomatis."],
+  ["lock", "Aman", "Data terlindungi per usaha."],
+  ["banknote", "Rupiah & WIB", "Format Indonesia bawaan."],
+  ["calendar", "Siap dicetak", "Laporan A4 rapi dan PDF."],
 ];
 
 const BARS = [["Jun", 90, 60], ["Jul", 110, 70], ["Agu", 100, 75], ["Sep", 130, 80], ["Okt", 120, 85], ["Nov", 150, 90]] as const;
@@ -55,7 +55,7 @@ export default function Home() {
         <div className="lp-nav-in">
           <a href="/" aria-label="FINORA"><Logo size={34} /></a>
           <nav className="lp-links" aria-label="Navigasi utama">
-            <a href="#fitur">Fitur</a><a href="#modul">Modul</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a>
+            <a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a>
           </nav>
           <div className="lp-actions">
             <a className="btn ghost" href="/login">Masuk</a>
@@ -66,9 +66,9 @@ export default function Home() {
 
       <section className="lp-hero">
         <div className="lp-wrap center">
-          <span className="pill"><Icon name="sparkles" size={14} />Untuk UMKM Indonesia · Rupiah · WIB</span>
-          <h1>Pembukuan UMKM yang rapi, akurat, dan siap diaudit.</h1>
-          <p className="lead">FINORA mencatat setiap transaksi sebagai jurnal double-entry, mengunci periode, dan menyusun laporan keuangan dalam Rupiah — dengan jejak audit di setiap langkah.</p>
+          <span className="pill"><Icon name="sparkles" size={14} />Untuk UMKM Indonesia</span>
+          <h1>Pembukuan usaha yang rapi, tanpa ribet.</h1>
+          <p className="lead">Catat penjualan, pembelian, dan biaya dengan mudah. FINORA menyusun laporan keuangan Anda secara otomatis dalam Rupiah — tanpa perlu belajar akuntansi.</p>
           <div className="lp-cta">
             <a className="btn primary lg" href="/register">Mulai sekarang <Icon name="arrow" /></a>
             <a className="btn ghost lg" href="/login">Masuk</a>
@@ -90,7 +90,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <p className="note">Pratinjau desain — angka hanyalah contoh ilustrasi, bukan data nyata.</p>
+          <p className="note">Tampilan contoh. Angka hanya ilustrasi, bukan data nyata.</p>
         </div>
       </section>
 
@@ -101,11 +101,11 @@ export default function Home() {
       </div></section>
 
       <section id="fitur" className="lp-sec"><div className="lp-wrap">
-        <Head eyebrow="Fitur" title="Semua yang dibutuhkan pembukuan bisnis Anda" sub="Dari pencatatan jurnal sampai laporan — satu sumber kebenaran untuk angka bisnis." />
+        <Head eyebrow="Fitur" title="Semua yang usaha Anda butuhkan" sub="Dari pencatatan harian sampai laporan — satu tempat untuk angka bisnis Anda." />
         <div className="grid g3">
           {FEATURES.map((f) => (
             <article className="box" key={f.title}>
-              <div className="box-top"><span className="ibox"><Icon name={f.icon} size={22} /></span>{f.soon && <span className="soon">Segera</span>}</div>
+              <div className="box-top"><span className="ibox"><Icon name={f.icon} size={22} /></span></div>
               <h3>{f.title}</h3><p>{f.desc}</p>
             </article>
           ))}
@@ -113,23 +113,23 @@ export default function Home() {
       </div></section>
 
       <section id="modul" className="lp-sec alt"><div className="lp-wrap">
-        <Head eyebrow="Modul" title="14 menu, satu alur kerja" sub="Navigasi yang sama dengan aplikasi. Modul bertanda “Segera” sedang dikerjakan." />
+        <Head eyebrow="Modul" title="Satu aplikasi, semua kebutuhan" sub="Menu yang sama tersedia di HP dan komputer." />
         <div className="grid g4">
-          {MODULES.map(([l, ic, on]) => (
-            <div className={`mod ${on ? "on" : ""}`} key={l}><Icon name={ic} size={20} />{l}{!on && <span className="soon">Segera</span>}</div>
+          {MODULES.map(([l, ic]) => (
+            <div className="mod on" key={l}><Icon name={ic} size={20} />{l}</div>
           ))}
         </div>
       </div></section>
 
       <section id="cara-kerja" className="lp-sec"><div className="lp-wrap">
-        <Head eyebrow="Cara kerja" title="Tiga langkah menuju laporan yang bisa dipercaya" />
+        <Head eyebrow="Cara kerja" title="Tiga langkah menuju laporan yang bisa Anda percaya" />
         <div className="grid g3">
           {STEPS.map(([n, t, d]) => (<article className="box" key={n}><span className="step">{n}</span><h3>{t}</h3><p>{d}</p></article>))}
         </div>
       </div></section>
 
       <section id="keamanan" className="lp-sec alt"><div className="lp-wrap">
-        <Head eyebrow="Keamanan & integritas" title="Dibangun agar angka tetap benar" sub="Pengaman ada di level database, bukan hanya di tampilan." />
+        <Head eyebrow="Keamanan" title="Dirancang agar angka tetap benar dan aman" />
         <div className="grid g4">
           {SECURITY.map(([ic, t, d]) => (
             <article className="box" key={t}><span className="ibox ok"><Icon name={ic} size={22} /></span><h3>{t}</h3><p>{d}</p></article>
@@ -140,18 +140,18 @@ export default function Home() {
       <section className="lp-sec"><div className="lp-wrap">
         <div className="cta-box">
           <h2>Mulai rapikan pembukuan Anda hari ini.</h2>
-          <p>Buat akun, buat bisnis, dan catat jurnal pertama Anda dalam hitungan menit.</p>
+          <p>Buat akun, isi nama usaha, dan catat transaksi pertama Anda dalam hitungan menit.</p>
           <div className="lp-cta"><a className="btn primary lg" href="/register">Buat akun <Icon name="arrow" /></a><a className="btn ghost lg" href="/login">Sudah punya akun? Masuk</a></div>
         </div>
       </div></section>
 
       <footer className="lp-foot"><div className="lp-wrap">
         <div className="foot-row">
-          <div><Logo size={32} /><p>Akuntansi & intelijen keuangan untuk UMKM Indonesia.</p></div>
-          <div><b>Produk</b><a href="#fitur">Fitur</a><a href="#modul">Modul</a><a href="#keamanan">Keamanan</a></div>
+          <div><Logo size={32} /><p>Pembukuan dan laporan keuangan untuk UMKM Indonesia.</p></div>
+          <div><b>Produk</b><a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a></div>
           <div><b>Akun</b><a href="/login">Masuk</a><a href="/register">Daftar</a></div>
         </div>
-        <div className="foot-copy"><span>© 2026 FINORA. Seluruh hak dilindungi.</span><span>Dibangun dengan Next.js, Supabase, dan Vercel.</span></div>
+        <div className="foot-copy"><span>© 2026 FINORA. Seluruh hak dilindungi.</span><span>Dibuat untuk UMKM Indonesia.</span></div>
       </div></footer>
     </div>
   );

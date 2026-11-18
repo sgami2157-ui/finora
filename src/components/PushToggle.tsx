@@ -29,7 +29,7 @@ export default function PushToggle({ businessId, publicKey }: { businessId: stri
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(publicKey!) });
       const res = await fetch("/api/push/subscribe", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ business: businessId, subscription: sub.toJSON() }) });
-      if (!res.ok) { await sub.unsubscribe(); throw new Error("Server menolak langganan"); }
+      if (!res.ok) { await sub.unsubscribe(); throw new Error("Notifikasi belum bisa diaktifkan. Coba lagi"); }
       setState("on");
     } catch (e) { setMsg((e as Error).message || "Gagal mengaktifkan notifikasi"); }
     finally { setBusy(false); }
@@ -47,14 +47,14 @@ export default function PushToggle({ businessId, publicKey }: { businessId: stri
     setBusy(true); setMsg(null);
     const res = await fetch("/api/push/test", { method: "POST" });
     const j = await res.json().catch(() => ({}));
-    setMsg(res.ok ? (j.sent > 0 ? "Notifikasi uji dikirim. Periksa perangkat Anda." : "Terkirim ke 0 perangkat. Coba aktifkan ulang.") : j.error ?? "Gagal mengirim uji");
+    setMsg(res.ok ? (j.sent > 0 ? "Notifikasi uji dikirim. Periksa perangkat Anda." : "Notifikasi belum sampai. Coba matikan lalu aktifkan lagi.") : j.error ?? "Gagal mengirim uji");
     setBusy(false);
   }
 
   if (state === "loading") return <p className="muted sm">Memeriksa…</p>;
-  if (state === "unconfigured") return <p className="muted sm">Notifikasi belum dikonfigurasi oleh pemilik aplikasi (kunci VAPID belum diisi).</p>;
-  if (state === "unsupported") return <p className="muted sm">Perangkat/peramban ini tidak mendukung notifikasi push. Pasang FINORA ke layar utama atau gunakan APK.</p>;
-  if (state === "denied") return <p className="muted sm">Izin notifikasi diblokir. Aktifkan lewat pengaturan situs/aplikasi di perangkat Anda, lalu muat ulang.</p>;
+  if (state === "unconfigured") return <p className="muted sm">Notifikasi belum tersedia saat ini.</p>;
+  if (state === "unsupported") return <p className="muted sm">Perangkat atau peramban ini belum mendukung notifikasi. Coba pasang FINORA ke layar utama.</p>;
+  if (state === "denied") return <p className="muted sm">Notifikasi diblokir. Izinkan lewat pengaturan situs atau aplikasi di perangkat Anda, lalu muat ulang halaman.</p>;
   return (
     <div className="form">
       <p className="muted sm">{state === "on" ? "Notifikasi aktif di perangkat ini." : "Dapatkan pengingat piutang/utang jatuh tempo dan stok menipis setiap pagi (±08.00 WIB)."}</p>

@@ -44,7 +44,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   return (
     <>
     <div className="screen-only">
-      <PageHead title="Laporan Keuangan" desc={`Periode ${fmtDate(from)} – ${fmtDate(to)} · dari jurnal yang sudah diposting.`}>
+      <PageHead title="Laporan Keuangan" desc={`Periode ${fmtDate(from)} – ${fmtDate(to)} · dari transaksi yang sudah tercatat.`}>
         <a className="btn ghost" href={`/api/export/balances?from=${from}&to=${to}`} download>Unduh CSV (saldo akun)</a>
         <PrintButton />
       </PageHead>
@@ -94,7 +94,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         {cfOpen + cfNet !== cfClose && <Callout tone="warn" title="Ada selisih">Saldo awal ditambah perubahan tidak sama dengan saldo akhir; mohon periksa jurnal pada periode ini.</Callout>}
       </Panel>
       <Panel title="Neraca Saldo (untuk akuntan)" desc={`Per ${fmtDate(to)}`} className="mt">
-        {tbRows.length === 0 ? <Empty icon="scale" title="Belum ada saldo" desc="Neraca saldo terisi setelah ada jurnal yang diposting." /> : (
+        {tbRows.length === 0 ? <Empty icon="scale" title="Belum ada saldo" desc="Neraca saldo terisi setelah ada transaksi tercatat." /> : (
           <div className="table-wrap"><table>
             <thead><tr><th>Akun</th><th className="num">Debit</th><th className="num">Kredit</th></tr></thead>
             <tbody>

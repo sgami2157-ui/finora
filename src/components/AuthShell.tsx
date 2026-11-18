@@ -10,7 +10,7 @@ export default function AuthShell({ mode, children }: { mode: "login" | "registe
         <div className="auth-msg">
           <h2>{reg ? "Mulai catat keuangan bisnis Anda dengan benar." : "Selamat datang kembali."}</h2>
           <ul>
-            {["Jurnal double-entry yang tervalidasi", "Laporan laba rugi dan neraca otomatis", "Data bisnis terisolasi dengan RLS"].map((t) => (
+            {["Pembukuan rapi tanpa perlu belajar akuntansi", "Laporan untung rugi otomatis", "Data usaha Anda aman dan terpisah"].map((t) => (
               <li key={t}><Icon name="check" size={20} className="pos" />{t}</li>
             ))}
           </ul>

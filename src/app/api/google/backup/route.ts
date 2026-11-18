@@ -10,7 +10,7 @@ async function guard(business?: string) {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return { err: NextResponse.json({ error: "Tidak terautentikasi" }, { status: 401 }) };
   const { data: m } = await sb.from("business_members").select("role").eq("business_id", business).eq("user_id", user.id).in("role", ["owner", "admin"]).maybeSingle();
-  if (!m) return { err: NextResponse.json({ error: "Hanya owner/admin" }, { status: 403 }) };
+  if (!m) return { err: NextResponse.json({ error: "Hanya pemilik atau admin usaha yang dapat melakukan ini" }, { status: 403 }) };
   return { sb, user };
 }
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const r = await runBackup(g.sb!, supabaseAdmin(), business!, biz.name, g.user!.id);
     return NextResponse.json(r);
   } catch (e) {
-    return NextResponse.json({ error: `Cadangan gagal: ${(e as Error).message}` }, { status: 502 });
+    return NextResponse.json({ error: "Cadangan belum berhasil. Pastikan Google Drive masih terhubung, lalu coba lagi." }, { status: 502 });
   }
 }
 

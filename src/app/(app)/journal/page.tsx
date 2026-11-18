@@ -18,10 +18,10 @@ export default async function JournalPage() {
   ]);
 
   const tone = (st: string) => (st === "posted" ? "pos" : st === "reversed" ? "neg" : "muted") as "pos" | "neg" | "muted";
-  const label = (st: string) => (st === "posted" ? "Diposting" : st === "reversed" ? "Dibalik" : st === "draft" ? "Draf" : st);
+  const label = (st: string) => (st === "posted" ? "Tercatat" : st === "reversed" ? "Dibalik" : st === "draft" ? "Draf" : st);
   return (
     <>
-      <PageHead title="Jurnal Akuntansi" desc="Jurnal umum double-entry. Total debit harus sama dengan kredit sebelum diposting." />
+      <PageHead title="Jurnal Akuntansi" desc="Catatan lengkap semua transaksi. Total debit harus sama dengan kredit sebelum disimpan." />
       <JournalForm businessId={biz.id} accounts={accounts ?? []} />
       <Panel title="Riwayat jurnal" desc="100 jurnal terbaru, termasuk yang dibuat otomatis dari modul lain">
         {(entries ?? []).length === 0 ? (

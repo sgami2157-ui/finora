@@ -30,6 +30,6 @@ export async function POST(req: NextRequest) {
     if (error) throw new Error("File terunggah tetapi gagal mencatat referensi");
     return NextResponse.json({ ok: true, link: up.webViewLink ?? null });
   } catch (e) {
-    return NextResponse.json({ error: (e as Error).message }, { status: 502 });
+    return NextResponse.json({ error: "Dokumen belum berhasil disimpan ke Google Drive. Coba lagi." }, { status: 502 });
   }
 }
