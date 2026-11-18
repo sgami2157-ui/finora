@@ -5,7 +5,7 @@ import { DocRowActions, UploadForm } from "@/components/DocumentForms";
 import { DOC_CATEGORIES } from "@/lib/doc-categories";
 import { Badge, Callout, Empty, PageHead, Panel } from "@/components/ui";
 
-type D = { id: string; category: string; file_name: string; mime_type: string; size_bytes: number | string; storage_path: string | null; created_at: string };
+type D = { id: string; category: string; file_name: string; mime_type: string; size_bytes: number | string; storage_path: string | null; drive_file_id: string | null; created_at: string };
 const label = new Map(DOC_CATEGORIES);
 const size = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
 
@@ -13,8 +13,10 @@ export default async function DocumentsPage() {
   const biz = await getBusiness();
   if (!biz) return (<><PageHead title="Dokumen" /><Empty icon="inbox" title="Buat bisnis terlebih dahulu"><a className="btn primary" href="/dashboard">Ke Dashboard</a></Empty></>);
   const sb = await supabaseServer();
-  const { data } = await sb.from("attachments").select("id,category,file_name,mime_type,size_bytes,storage_path,created_at").eq("business_id", biz.id).is("deleted_at", null).order("created_at", { ascending: false }).limit(100);
+  const { data } = await sb.from("attachments").select("id,category,file_name,mime_type,size_bytes,storage_path,drive_file_id,created_at").eq("business_id", biz.id).is("deleted_at", null).order("created_at", { ascending: false }).limit(100);
   const docs = (data ?? []) as D[];
+  const { data: integ } = await sb.from("integrations_public").select("status,last_verified_at").eq("business_id", biz.id).eq("provider", "google_drive").maybeSingle();
+  const driveOn = integ?.status === "connected" && !!integ.last_verified_at;
   return (
     <>
       <PageHead title="Dokumen" desc="Simpan foto struk, nota, bukti transfer, dan berkas penting usaha di satu tempat yang aman." />
@@ -30,7 +32,7 @@ export default async function DocumentsPage() {
                     <div><strong>{d.file_name}</strong><small className="sub">{fmtDate(d.created_at)} · {size(Number(d.size_bytes))}</small></div>
                     <Badge tone="pri">{label.get(d.category) ?? d.category}</Badge>
                   </div>
-                  <div className="row-foot"><span /><DocRowActions id={d.id} path={d.storage_path} name={d.file_name} /></div>
+                  <div className="row-foot"><span /><DocRowActions id={d.id} path={d.storage_path} name={d.file_name} driveConnected={driveOn} onDrive={!!d.drive_file_id} /></div>
                 </li>
               ))}
             </ul>

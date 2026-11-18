@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC = ["/login", "/register", "/api/google/callback"];
+const PUBLIC = ["/login", "/register", "/api/google/callback", "/.well-known", "/api/cron"]; // /api/cron dilindungi CRON_SECRET di route
 
 export async function middleware(req: NextRequest) {
   let res = NextResponse.next({ request: req });

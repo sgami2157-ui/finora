@@ -13,5 +13,11 @@
 - Parameter `state` acak + cookie httpOnly; callback memverifikasi pengguna & peran owner/admin.
 - Refresh token dienkripsi AES-256-GCM sebelum disimpan; tabel `integrations` tidak dapat dibaca klien (hanya view `integrations_public` tanpa token).
 
+## Fitur (kode ditulis, BELUM diuji dengan akun Google sungguhan)
+- **Simpan dokumen ke Drive:** tombol di halaman Dokumen → `FINORA/<Bisnis>/<Tahun>/<Kategori>/`. Sukses hanya bila ukuran file di Drive = ukuran yang dikirim.
+- **Cadangan data:** Pengaturan → "Cadangkan sekarang" mengekspor tabel bisnis (akun, jurnal, faktur, pembayaran, produk, pelanggan, pemasok, mutasi stok) sebagai CSV + `manifest.json` (SHA-256) ke `FINORA/<Bisnis>/Backup/<waktu>/`. Status "Terverifikasi" dicatat di `backup_logs` hanya jika semua ukuran cocok.
+- **Cadangan otomatis mingguan:** opt-in (`integrations.backup_auto`), dijalankan oleh cron `/api/cron/notify`.
+- Variabel tambahan: `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET`.
+
 ## Belum dibuat
-Upload dokumen, simpan laporan, ekspor backup & restore ke Drive. Helper `ensureFolderPath` sudah menyiapkan struktur `FINORA/<Bisnis>/<Tahun>/<Sub>`.
+Restore dari cadangan, simpan laporan PDF ke Drive.

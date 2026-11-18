@@ -3,6 +3,8 @@ import { getBusiness } from "@/lib/data";
 import DisconnectButton from "./DisconnectButton";
 import { Badge, Empty, PageHead, Panel } from "@/components/ui";
 import { fmtDate } from "@/lib/format";
+import BackupPanel from "./BackupPanel";
+import PushToggle from "@/components/PushToggle";
 
 const MESSAGES: Record<string, string> = {
   ok: "Google Drive berhasil terhubung dan terverifikasi.",
@@ -18,6 +20,9 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
   const { data: integ } = await sb.from("integrations_public").select("status,external_account,last_verified_at")
     .eq("business_id", biz.id).eq("provider", "google_drive").maybeSingle();
   const verified = integ?.status === "connected" && !!integ.last_verified_at;
+  const { data: bi } = await sb.from("integrations").select("backup_auto").eq("business_id", biz.id).eq("provider", "google_drive").maybeSingle();
+  const { data: logs } = await sb.from("backup_logs").select("status,created_at,row_counts,detail").eq("business_id", biz.id).eq("kind", "backup").order("created_at", { ascending: false }).limit(5);
+  const vapid = process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY && process.env.VAPID_SUBJECT ? process.env.VAPID_PUBLIC_KEY : null;
 
   return (
     <>
@@ -28,8 +33,23 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           <div className="form">
             {verified && <p className="muted sm">Akun: {integ!.external_account} · diverifikasi {fmtDate(integ!.last_verified_at)}</p>}
             {verified ? <DisconnectButton businessId={biz.id} /> : <a href={`/api/google/auth?business=${biz.id}`}><button className="primary lg">Hubungkan Google Drive</button></a>}
-            <small className="hint">Unggah dokumen, simpan laporan, dan backup ke Drive belum diimplementasikan di versi ini.</small>
+            <small className="hint">{verified ? "Dokumen dapat disimpan ke Drive dari halaman Dokumen. Cadangan data (CSV) ada di panel di bawah." : "Setelah terhubung: simpan dokumen ke Drive dan cadangkan seluruh data (CSV) dengan satu klik."}</small>
           </div>
+        </Panel>
+        {verified && (
+          <Panel title="Cadangan ke Google Drive" desc="Seluruh data bisnis diekspor sebagai CSV + manifest berisi checksum">
+            <BackupPanel businessId={biz.id} auto={!!bi?.backup_auto} />
+            {(logs ?? []).length > 0 && (
+              <ul className="rows" style={{ marginTop: 12 }}>
+                {(logs ?? []).map((l, k) => (
+                  <li key={k} className="row-card"><div className="row-main"><div><strong>{fmtDate(l.created_at)}</strong><small className="sub">{l.status === "verified" ? `${Object.values((l.row_counts ?? {}) as Record<string, number>).reduce((a, b) => a + b, 0)} baris` : l.detail ?? "gagal"}</small></div><Badge tone={l.status === "verified" ? "pos" : "neg"}>{l.status === "verified" ? "Terverifikasi" : "Gagal"}</Badge></div></li>
+                ))}
+              </ul>
+            )}
+          </Panel>
+        )}
+        <Panel title="Notifikasi" desc="Pengingat tagihan jatuh tempo dan stok menipis">
+          <PushToggle businessId={biz.id} publicKey={vapid} />
         </Panel>
         <Panel title="Macaly Cloud" action={<Badge>Belum terverifikasi</Badge>}>
           <p className="muted sm">Integrasi belum dipakai karena endpoint belum diverifikasi. Lihat docs/MACALY.md.</p>

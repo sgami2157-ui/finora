@@ -66,3 +66,19 @@ export async function ensureFolderPath(token: string, business: string, year: st
   const y = await ensureFolder(token, year, b);
   return ensureFolder(token, sub, y);
 }
+
+/** Unggah berkas (multipart) ke folder Drive. Mengembalikan id, tautan, dan ukuran yang dilaporkan Drive. */
+export async function uploadFile(token: string, folderId: string, name: string, mime: string, body: Buffer): Promise<{ id: string; webViewLink?: string; size: number }> {
+  const boundary = `finora${Date.now().toString(36)}`;
+  const meta = JSON.stringify({ name, parents: [folderId], mimeType: mime });
+  const payload = Buffer.concat([
+    Buffer.from(`--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: ${mime}\r\n\r\n`),
+    body, Buffer.from(`\r\n--${boundary}--`),
+  ]);
+  const res = await fetch("https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,size", {
+    method: "POST", headers: { authorization: `Bearer ${token}`, "content-type": `multipart/related; boundary=${boundary}` }, body: payload as unknown as BodyInit,
+  });
+  if (!res.ok) throw new Error(`Unggah ke Google Drive gagal (${res.status})`);
+  const j = (await res.json()) as { id: string; webViewLink?: string; size?: string };
+  return { id: j.id, webViewLink: j.webViewLink, size: Number(j.size ?? 0) };
+}

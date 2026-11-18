@@ -58,7 +58,7 @@ export function UploadForm({ businessId }: { businessId: string }) {
   );
 }
 
-export function DocRowActions({ id, path, name }: { id: string; path: string | null; name: string }) {
+export function DocRowActions({ id, path, name, driveConnected = false, onDrive = false }: { id: string; path: string | null; name: string; driveConnected?: boolean; onDrive?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false); const [error, setError] = useState<string | null>(null);
   async function open() {
@@ -68,6 +68,14 @@ export function DocRowActions({ id, path, name }: { id: string; path: string | n
     setBusy(false);
     if (err || !data?.signedUrl) return setError(friendlyError(err?.message ?? "Tidak dapat membuka file."));
     window.open(data.signedUrl, "_blank", "noopener");
+  }
+  async function toDrive() {
+    setBusy(true); setError(null);
+    const res = await fetch("/api/google/upload", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
+    const j = await res.json().catch(() => ({}));
+    setBusy(false);
+    if (!res.ok) return setError(j.error ?? "Gagal menyimpan ke Drive");
+    router.refresh();
   }
   async function remove() {
     if (!confirm(`Hapus dokumen “${name}”?`)) return;
@@ -81,6 +89,7 @@ export function DocRowActions({ id, path, name }: { id: string; path: string | n
   return (
     <div className="inline-edit">
       <button type="button" className="ghost sm" onClick={open} aria-busy={busy} disabled={busy || !path}>Buka</button>
+      {onDrive ? <span className="badge pos">Di Drive</span> : driveConnected && path && <button type="button" className="ghost sm" onClick={toDrive} aria-busy={busy} disabled={busy}>Simpan ke Drive</button>}
       <button type="button" className="ghost sm" onClick={remove} aria-busy={busy} disabled={busy}>Hapus</button>
       {error && <small className="neg">{error}</small>}
     </div>

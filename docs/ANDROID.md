@@ -28,3 +28,12 @@ cd android && ./gradlew assembleDebug   # butuh JDK 17 + Android SDK
 ## Status verifikasi
 Manifest/ikon/service worker disiapkan, tetapi build APK **belum dijalankan** (lingkungan ini tanpa jaringan/Android SDK).
 Jalankan workflow di atas untuk memverifikasi; bila ada langkah gagal, kirim lognya.
+
+## Menghilangkan bilah alamat (TWA)
+Bilah alamat hilang bila Digital Asset Links terverifikasi. Web menyajikan `/.well-known/assetlinks.json` dari variabel Vercel:
+- `ANDROID_PACKAGE_NAME` = package name APK Anda
+- `ANDROID_SHA256_FINGERPRINTS` = sidik jari SHA-256 sertifikat penandatangan (`keytool -list -v -keystore <keystore>`). Bila APK diunggah ke Play dengan Play App Signing, pakai sidik jari dari Play Console → App integrity (bukan keystore lokal).
+Redeploy, cek `https://<domain>/.well-known/assetlinks.json`, lalu hapus data aplikasi/pasang ulang APK. Tanpa env ini endpoint menjawab 404.
+
+## Notifikasi push
+Web Push (VAPID) bekerja di TWA/Chrome. Isi di Vercel: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (`npx web-push generate-vapid-keys`), `CRON_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`. Aktifkan per perangkat di Pengaturan → Notifikasi. Cron harian 08:00 WIB mengirim ringkasan piutang/utang terlambat, tagihan ≤3 hari, dan stok menipis (hanya jika ada).
