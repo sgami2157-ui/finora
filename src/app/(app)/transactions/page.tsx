@@ -9,7 +9,6 @@ type Pay = { id: string; invoice_id: string; amount: number | string; paid_on: s
 
 const FILTERS: [string, string][] = [["all", "Semua"], ["sale", "Penjualan"], ["purchase", "Pembelian"], ["expense", "Biaya"], ["payment", "Pembayaran"]];
 const LABEL: Record<string, string> = { sale: "Penjualan", purchase: "Pembelian", expense: "Biaya", payment: "Pembayaran" };
-const HREF: Record<string, string> = { sale: "/sales", purchase: "/purchases", expense: "/expenses" };
 
 export default async function TransactionsPage({ searchParams }: { searchParams: Promise<{ type?: string; q?: string; from?: string; to?: string }> }) {
   const { type, q: qRaw, from: fRaw, to: tRaw } = await searchParams;
@@ -51,12 +50,12 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
     for (const r of (data ?? []) as { id: string; number: string; type: string }[]) numbers.set(r.id, r);
   }
 
-  type Item = { key: string; date: string; at: string; kind: string; ref: string; note: string; amount: number; inflow: boolean | null };
+  type Item = { inv: string; key: string; date: string; at: string; kind: string; ref: string; note: string; amount: number; inflow: boolean | null };
   const items: Item[] = [
-    ...((invRes.data ?? []) as Inv[]).map((i) => ({ key: "i" + i.id, date: i.issue_date, at: i.created_at, kind: i.type, ref: i.number, note: i.notes ?? "", amount: toCents(Number(i.total)), inflow: null })),
+    ...((invRes.data ?? []) as Inv[]).map((i) => ({ inv: i.id, key: "i" + i.id, date: i.issue_date, at: i.created_at, kind: i.type, ref: i.number, note: i.notes ?? "", amount: toCents(Number(i.total)), inflow: null })),
     ...payments.filter((p) => !q || (numbers.get(p.invoice_id)?.number ?? "").toLowerCase().includes(q.toLowerCase())).map((p) => {
       const inv = numbers.get(p.invoice_id);
-      return { key: "p" + p.id, date: p.paid_on, at: p.created_at, kind: "payment", ref: inv?.number ?? "–", note: "", amount: toCents(Number(p.amount)), inflow: inv?.type === "sale" };
+      return { inv: p.invoice_id, key: "p" + p.id, date: p.paid_on, at: p.created_at, kind: "payment", ref: inv?.number ?? "–", note: "", amount: toCents(Number(p.amount)), inflow: inv?.type === "sale" };
     }),
   ].sort((a, b) => (a.date === b.date ? (a.at < b.at ? 1 : -1) : a.date < b.date ? 1 : -1)).slice(0, 80);
 
@@ -88,7 +87,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
               <tr key={t.key}>
                 <td>{fmtDate(t.date)}</td>
                 <td><Badge tone={t.kind === "sale" ? "pos" : t.kind === "payment" ? "pri" : t.kind === "expense" ? "warn" : "muted"}>{LABEL[t.kind] ?? t.kind}</Badge></td>
-                <td>{HREF[t.kind] ? <a className="mono" href={HREF[t.kind]}>{t.ref}</a> : <span className="mono">{t.ref}</span>}{t.note && <small className="sub">{t.note}</small>}</td>
+                <td>{t.ref !== "–" ? <a className="mono link" href={`/invoices/${t.inv}`}>{t.ref}</a> : <span className="mono">{t.ref}</span>}{t.note && <small className="sub">{t.note}</small>}</td>
                 <td className="num">{t.inflow === null ? "" : t.inflow ? "+ " : "− "}{idr(t.amount)}</td>
               </tr>))}
             </tbody>

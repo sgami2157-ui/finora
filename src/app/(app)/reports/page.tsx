@@ -1,6 +1,10 @@
+import { Fragment } from "react";
 import { getBusiness, getBalances, idr, sumBy, monthRange } from "@/lib/data";
 import { fmtDate } from "@/lib/format";
 import { Badge, Callout, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
+import PrintButton from "@/components/PrintButton";
+import { supabaseServer } from "@/lib/supabase/server";
+import { toCents } from "@/lib/accounting/money";
 
 export default async function ReportsPage({ searchParams }: { searchParams: Promise<{ from?: string; to?: string }> }) {
   const biz = await getBusiness();
@@ -10,7 +14,17 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const from = sp.from || def.from;
   const to = sp.to || def.to;
 
-  const [period, upto] = await Promise.all([getBalances(biz.id, from, to), getBalances(biz.id, null, to)]);
+  const sb = await supabaseServer();
+  const [period, upto, cfRes] = await Promise.all([
+    getBalances(biz.id, from, to), getBalances(biz.id, null, to),
+    sb.rpc("cashflow_report", { p_business: biz.id, p_from: from, p_to: to }),
+  ]);
+  const cf = ((cfRes.data ?? []) as { section: string; label: string; amount: number | string }[]).map((r) => ({ ...r, cents: toCents(Number(r.amount)) }));
+  const cfOpen = cf.find((r) => r.label.startsWith("Saldo kas & bank awal"))?.cents ?? 0;
+  const cfClose = cf.find((r) => r.label.startsWith("Saldo kas & bank akhir"))?.cents ?? 0;
+  const cfSec = (k: string) => cf.filter((r) => r.section === k);
+  const cfSum = (k: string) => cfSec(k).reduce((s, r) => s + r.cents, 0);
+  const cfNet = cfSum("operasi") + cfSum("investasi") + cfSum("pendanaan");
   const revenue = sumBy(period, "revenue"), cogs = sumBy(period, "cogs"), exp = sumBy(period, "expense");
   const net = revenue - cogs - exp;
   const assets = sumBy(upto, "asset"), liab = sumBy(upto, "liability");
@@ -29,6 +43,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
     <>
       <PageHead title="Laporan Keuangan" desc={`Periode ${fmtDate(from)} – ${fmtDate(to)} · dari jurnal yang sudah diposting.`}>
         <a className="btn ghost" href={`/api/export/balances?from=${from}&to=${to}`} download>Unduh CSV (saldo akun)</a>
+        <PrintButton />
       </PageHead>
       <Callout title="Cara membaca laporan ini">
         <b>Laba Rugi</b> menjawab: &ldquo;sepanjang periode ini saya untung atau rugi?&rdquo; <b>Neraca</b> menjawab: &ldquo;apa saja yang dimiliki usaha dan apa yang masih menjadi utang?&rdquo; Anda tidak perlu menghafal istilahnya; tanda <b>?</b> menjelaskan setiap istilah.
@@ -57,6 +72,24 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           </tbody></table></div>
         </Panel>
       </div>
+      <Panel title="Arus Kas (uang masuk dan keluar)" desc={`${fmtDate(from)} – ${fmtDate(to)} · hanya pergerakan kas dan bank`} className="mt">
+        {cfRes.error ? <Callout tone="warn">Laporan arus kas belum dapat dimuat. Coba muat ulang halaman.</Callout> : cf.length <= 2 && cfNet === 0 ? (
+          <Empty icon="wallet" title="Belum ada uang masuk atau keluar" desc="Arus kas terisi setelah ada transaksi yang melibatkan kas atau bank pada periode ini." />
+        ) : (
+          <div className="table-wrap"><table><tbody>
+            {([["operasi", "Dari kegiatan usaha", "Uang masuk dan keluar dari jualan, beli barang, dan biaya harian."], ["investasi", "Dari investasi", "Membeli atau menjual peralatan jangka panjang."], ["pendanaan", "Dari pendanaan", "Modal yang Anda setor, penarikan pemilik, dan pinjaman."]] as const).map(([k, title, tip]) => cfSec(k).length > 0 && (
+              <Fragment key={k}>
+                <tr><td colSpan={2}><b><Term tip={tip}>{title}</Term></b></td></tr>
+                {cfSec(k).map((r) => <tr key={r.label}><td style={{ paddingLeft: 20 }}>{r.label}</td><td className="num">{idr(r.cents)}</td></tr>)}
+              </Fragment>
+            ))}
+            {row("Perubahan kas bersih", cfNet, true, "Total uang masuk dikurangi total uang keluar pada periode ini.")}
+            {row("Saldo kas & bank awal", cfOpen)}
+            {row("Saldo kas & bank akhir", cfClose, true)}
+          </tbody></table></div>
+        )}
+        {cfOpen + cfNet !== cfClose && <Callout tone="warn" title="Ada selisih">Saldo awal ditambah perubahan tidak sama dengan saldo akhir; mohon periksa jurnal pada periode ini.</Callout>}
+      </Panel>
       <Panel title="Neraca Saldo (untuk akuntan)" desc={`Per ${fmtDate(to)}`} className="mt">
         {tbRows.length === 0 ? <Empty icon="scale" title="Belum ada saldo" desc="Neraca saldo terisi setelah ada jurnal yang diposting." /> : (
           <div className="table-wrap"><table>
@@ -71,7 +104,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
           </table></div>
         )}
       </Panel>
-      <p className="note-foot">Belum tersedia: arus kas, buku besar, ekspor PDF/Excel/CSV, simpan ke Google Drive.</p>
+      <p className="note-foot">Belum tersedia: buku besar per akun, ekspor Excel, dan simpan ke Google Drive. Untuk PDF, gunakan Cetak lalu pilih “Simpan sebagai PDF”.</p>
     </>
   );
 }

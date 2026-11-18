@@ -61,7 +61,7 @@ export default async function OpenItems({ side }: { side: "receivable" | "payabl
                   <div className="row-main">
                     <div>
                       <strong>{pid ? nameOf.get(pid) ?? "Tanpa nama" : "Tanpa nama"}</strong>
-                      <small className="sub"><span className="mono">{r.number}</span> · {fmtDate(r.issue_date)}</small>
+                      <small className="sub"><a className="mono link" href={`/invoices/${r.id}`}>{r.number}</a> · {fmtDate(r.issue_date)}</small>
                     </div>
                     <div className="row-amt">
                       <strong>{idr(r.left)}</strong>

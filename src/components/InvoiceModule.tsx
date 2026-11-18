@@ -112,7 +112,7 @@ export default async function InvoiceModule({ kind }: { kind: Kind }) {
                     const pid = i.customer_id ?? i.supplier_id;
                     return (
                       <tr key={i.id}>
-                        <td><span className="mono">{i.number}</span>{i.notes && <small className="sub">{i.notes}</small>}</td>
+                        <td><a href={`/invoices/${i.id}`} className="mono link">{i.number}</a>{i.notes && <small className="sub">{i.notes}</small>}</td>
                         <td>{fmtDate(i.issue_date)}</td>
                         <td>{pid ? nameOf.get(pid) ?? "–" : "–"}</td>
                         <td className="num">{idr(total)}</td>
