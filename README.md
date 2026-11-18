@@ -30,7 +30,7 @@ npm run dev
 2. Terapkan `supabase/migrations/0001..0005` berurutan (`supabase db push` atau SQL editor).
 3. Jalankan `supabase/tests/rls_test.sql` di staging — harus mencetak `SEMUA TES RLS & JURNAL LULUS`.
 4. Authentication → aktifkan Email; atur Site URL & Redirect URLs ke domain Anda.
-5. Edge Function: `supabase functions deploy ai-analyst` lalu `supabase secrets set ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...`.
+5. Edge Function: `supabase functions deploy ai-analyst` lalu pasang salah satu penyedia: `supabase secrets set ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...` **atau** `supabase secrets set OPENAI_API_KEY=... OPENAI_MODEL=...` (opsional `AI_PROVIDER=anthropic|openai` jika keduanya terpasang). Nama model diisi sendiri; kode tidak menebaknya.
 
 ## Deploy Vercel
 1. Push repo ke GitHub, import di Vercel (framework Next.js terdeteksi).

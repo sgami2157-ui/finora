@@ -58,7 +58,7 @@ export default function AiChat({ businessId, initial }: { businessId: string; in
         <strong>{status === "off" ? "Fitur AI belum diaktifkan" : "Layanan AI belum tersedia"}</strong>
         <div>
           {status === "off"
-            ? "Fungsi AI sudah terpasang, tetapi kunci layanan AI belum diisi oleh pemilik aplikasi (ANTHROPIC_API_KEY dan ANTHROPIC_MODEL di Supabase). Sementara itu, “Wawasan otomatis” di atas tetap bekerja."
+            ? "Fungsi AI sudah terpasang, tetapi kunci layanan AI belum diisi oleh pemilik aplikasi (ANTHROPIC_API_KEY + ANTHROPIC_MODEL, atau OPENAI_API_KEY + OPENAI_MODEL di Supabase). Sementara itu, “Wawasan otomatis” di atas tetap bekerja."
             : "Fungsi AI belum bisa dihubungi. Wawasan otomatis di atas tetap bekerja."}
         </div>
       </div>

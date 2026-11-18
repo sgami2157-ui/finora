@@ -33,7 +33,7 @@ Semua transaksi menghasilkan jurnal otomatis lewat fungsi database.
 - ⬜ FIFO · rekonsiliasi bank · retur penjualan/pembelian · konfigurasi pajak · penutupan periode.
 
 ## Phase 4 — AI
-- ✅ Edge Function ai-analyst (hanya membaca, batas 30 pertanyaan/jam). Aktif setelah pemilik memasang `ANTHROPIC_API_KEY` dan `ANTHROPIC_MODEL`. Wawasan otomatis (non-AI) sudah berjalan.
+- ✅ Edge Function ai-analyst (hanya membaca, batas 30 pertanyaan/jam). Mendukung Anthropic atau OpenAI; aktif setelah pemilik memasang kunci + nama model salah satunya (opsional `AI_PROVIDER`). Wawasan otomatis (non-AI) sudah berjalan.
 - ⬜ Prakiraan arus kas, deteksi pengeluaran tidak wajar berbasis model.
 
 ## Phase 5 — Pengalaman produk
