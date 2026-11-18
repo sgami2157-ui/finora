@@ -1,0 +1,11 @@
+{
+  "appId": "com.finora.app",
+  "appName": "FINORA",
+  "webDir": "www",
+  "server": {
+    "url": "https://finora-appfuture.vercel.app",
+    "cleartext": false,
+    "allowNavigation": ["finora-appfuture.vercel.app", "*.supabase.co", "accounts.google.com"]
+  },
+  "android": { "allowMixedContent": false, "backgroundColor": "#111318" }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "finora-mobile",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pembungkus Android (Capacitor) untuk web FINORA. Memuat aplikasi dari URL produksi.",
+  "scripts": {
+    "add:android": "cap add android",
+    "icons": "capacitor-assets generate --android",
+    "sync": "cap sync android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}
