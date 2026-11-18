@@ -12,11 +12,13 @@ const GROUPS: { title: string; items: Item[] }[] = [
     { label: "Transaksi", icon: "transfer", href: "/transactions" },
     { label: "Jurnal Akuntansi", icon: "book", href: "/journal", sub: "Catatan akuntansi lengkap" },
     { label: "Kas & Bank", icon: "bank", href: "/cash" },
+    { label: "Buku Besar", icon: "book", href: "/ledger", sub: "Rincian per akun" },
   ] },
   { title: "Bisnis", items: [
     { label: "Penjualan", icon: "cart", href: "/sales" },
     { label: "Pembelian", icon: "bag", href: "/purchases" },
     { label: "Biaya Operasional", icon: "wallet", href: "/expenses" },
+    { label: "Pelanggan & Pemasok", icon: "folder", href: "/parties", sub: "Kontak dan tagihannya" },
     { label: "Produk & Persediaan", icon: "box", href: "/products", sub: "Barang dan stoknya" },
     { label: "Piutang", icon: "coin", href: "/receivables", sub: "Pelanggan yang belum bayar" },
     { label: "Utang", icon: "banknote", href: "/payables", sub: "Tagihan yang harus Anda bayar" },

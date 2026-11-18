@@ -439,3 +439,6 @@ button[aria-busy="true"]::after { content: ""; display: inline-block; width: 13p
   .pd-foot { margin-top: 28px; padding-top: 8px; border-top: 1px solid #bbb; font-size: 8.5pt; color: #666; }
 }
 .link { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.duo-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } @media (max-width: 520px) { .duo-fields { grid-template-columns: 1fr; } }
+.party-edit { display: grid; gap: 8px; min-width: 220px; } .party-edit .mini input { width: 100%; }
+.filter.inline { display: flex; gap: 8px; margin: 0; align-items: center; } .filter.inline input { min-width: 0; width: 160px; }

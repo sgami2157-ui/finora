@@ -7,6 +7,7 @@ Hasil yang diharapkan: pesan error berawalan `ROLLBACK_OK` yang memuat ringkasan
 |---|---|
 | `financial_guards.sql` | Faktur/pembayaran tidak bisa diubah langsung lewat API; alur sah (create_invoice, record_payment) tetap jalan |
 | `cashflow_reconciles.sql` | Saldo akhir laporan arus kas = saldo akun kas/bank di buku besar |
+| `ledger_reconciles.sql` | Saldo akhir buku besar tiap akun = `account_balances` |
 | `stock_integrity.sql` | Stok hanya berubah lewat fungsi; HPP rata-rata tertimbang dan jurnal HPP |
 
 Tes aplikasi (logika murni): `npm test`.
