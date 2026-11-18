@@ -42,7 +42,7 @@ export default function LoginPage() {
         </label>
         {error && <div className="err">{error}</div>}
         {info && <div className="pos">{info}</div>}
-        <button className="primary" disabled={busy}>{busy ? "Memproses…" : "Masuk"}</button>
+        <button className="primary" aria-busy={busy} disabled={busy}>{busy ? "Memproses…" : "Masuk"}</button>
         <button type="button" className="ghost" onClick={recover}>Lupa kata sandi</button>
       </form>
       <p className="alt">Belum punya akun? <a href="/register">Daftar</a></p>

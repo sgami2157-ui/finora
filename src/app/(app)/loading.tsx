@@ -1,12 +1,12 @@
-/** Kerangka pemuatan agar halaman terasa responsif saat data diambil. */
+import BrandLoader from "@/components/BrandLoader";
+
+/** Tampilan pemuatan halaman: loader FINORA di area konten, lalu kerangka agar tata letak tidak melompat. */
 export default function Loading() {
   return (
-    <div aria-busy="true" aria-live="polite">
+    <div aria-busy="true">
+      <div className="page-loading"><BrandLoader label="Memuat…" /></div>
       <div className="skeleton sk-title" />
-      <div className="skeleton sk-line" />
-      <div className="kpis">{[0, 1, 2, 3].map((i) => <div key={i} className="skeleton sk-card" />)}</div>
-      <div className="skeleton sk-block" />
-      <span className="sr-only">Memuat…</span>
+      <div className="kpis">{[0, 1, 2].map((i) => <div key={i} className="skeleton sk-card" />)}</div>
     </div>
   );
 }

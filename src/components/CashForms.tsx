@@ -56,7 +56,7 @@ export function NewCashAccountForm({ businessId }: { businessId: string }) {
       <small className="hint">Saldo awal dijurnal otomatis: debit rekening, kredit Modal Pemilik.</small>
       {error && <div className="alert err" role="alert">{error}</div>}
       {ok && <div className="alert ok" role="status">Rekening ditambahkan.</div>}
-      <button className="primary lg" disabled={busy || !name.trim()}>{busy ? "Menyimpan…" : "Tambah rekening"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || !name.trim()}>{busy ? "Menyimpan…" : "Tambah rekening"}</button>
     </form>
   );
 }
@@ -104,7 +104,7 @@ export function TransferForm({ businessId, accounts }: { businessId: string; acc
       <small className="hint">Transfer antar rekening tidak dihitung sebagai pendapatan maupun beban.</small>
       {error && <div className="alert err" role="alert">{error}</div>}
       {ok && <div className="alert ok" role="status">Transfer dicatat.</div>}
-      <button className="primary lg" disabled={busy || !amount}>{busy ? "Memproses…" : "Transfer"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || !amount}>{busy ? "Memproses…" : "Transfer"}</button>
     </form>
   );
 }

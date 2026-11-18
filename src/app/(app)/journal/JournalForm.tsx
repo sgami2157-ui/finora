@@ -64,7 +64,7 @@ export default function JournalForm({ businessId, accounts }: { businessId: stri
       <button type="button" onClick={() => setLines([...lines, empty()])}>+ Tambah baris</button>
       <p className={balanced ? "pos" : "neg"}>Debit {d.toLocaleString("id-ID")} · Kredit {c.toLocaleString("id-ID")} {balanced ? "✓ seimbang" : "✗ belum seimbang"}</p>
       {error && <div className="err">{error}</div>}
-      <button className="primary" disabled={busy || !balanced}>{busy ? "Memposting…" : "Posting jurnal"}</button>
+      <button className="primary" aria-busy={busy} disabled={busy || !balanced}>{busy ? "Memposting…" : "Posting jurnal"}</button>
     </form>
   );
 }

@@ -85,7 +85,7 @@ export default function AiChat({ businessId, initial }: { businessId: string; in
         </div>
         <div className="chat-row">
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tulis pertanyaan Anda…" maxLength={2000} aria-label="Pertanyaan" />
-          <button className="primary" disabled={busy || !q.trim()}>Kirim</button>
+          <button className="primary" aria-busy={busy} disabled={busy || !q.trim()}>Kirim</button>
         </div>
       </form>
       <small className="hint">Jawaban AI dibuat dari angka di aplikasi ini dan bisa keliru. Periksa kembali sebelum mengambil keputusan penting.</small>

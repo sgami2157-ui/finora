@@ -40,7 +40,7 @@ function NewProduct({ businessId }: { businessId: string }) {
       </div>
       <small className="hint">Stok awal diisi lewat “Tambah stok” supaya nilai persediaan tercatat dengan benar.</small>
       <Msg error={error} ok={ok} />
-      <button className="primary lg" disabled={busy || !name.trim()}>{busy ? "Menyimpan…" : "Simpan produk"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || !name.trim()}>{busy ? "Menyimpan…" : "Simpan produk"}</button>
     </form>
   );
 }
@@ -91,7 +91,7 @@ function StockIn({ businessId, products, cashAccounts }: { businessId: string; p
         : <label className="field"><span>Jatuh tempo (opsional)</span><input type="date" min={date} value={due} onChange={(e) => setDue(e.target.value)} /></label>}
       <div className="total-bar"><span>Total pembelian</span><strong>Rp {total.toLocaleString("id-ID")}</strong></div>
       <Msg error={error} ok={ok} />
-      <button className="primary lg" disabled={busy || q <= 0}>{busy ? "Menyimpan…" : "Tambah stok"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || q <= 0}>{busy ? "Menyimpan…" : "Tambah stok"}</button>
     </form>
   );
 }
@@ -131,7 +131,7 @@ function Adjust({ businessId, products }: { businessId: string; products: Prod[]
         <label className="field"><span>Alasan (opsional)</span><input value={reason} onChange={(e) => setReason(e.target.value)} maxLength={120} placeholder="Mis. rusak, hilang" /></label>
       </div>
       <Msg error={error} ok={ok} />
-      <button className="primary lg" disabled={busy || n == null}>{busy ? "Menyimpan…" : "Simpan penyesuaian"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || n == null}>{busy ? "Menyimpan…" : "Simpan penyesuaian"}</button>
     </form>
   );
 }
@@ -181,7 +181,7 @@ export function ProductRowActions({ id, name, price, minStock }: { id: string; n
       <div className="inline-edit wrap">
         <label className="mini">Harga jual<MoneyInput value={val} onChange={setVal} /></label>
         <label className="mini">Stok minimum<input inputMode="decimal" value={min} onChange={(e) => setMin(e.target.value)} placeholder="mis. 5" aria-label="Stok minimum" /></label>
-        <button type="button" className="primary sm" onClick={save} disabled={busy}>Simpan</button>
+        <button type="button" className="primary sm" onClick={save} aria-busy={busy} disabled={busy}>Simpan</button>
         <button type="button" className="ghost sm" onClick={() => { setEdit(false); setError(null); }}>Batal</button>
         {error && <small className="neg">{error}</small>}
       </div>
@@ -190,7 +190,7 @@ export function ProductRowActions({ id, name, price, minStock }: { id: string; n
   return (
     <div className="inline-edit">
       <button type="button" className="ghost sm" onClick={() => setEdit(true)}>Ubah</button>
-      <button type="button" className="ghost sm" onClick={archive} disabled={busy}>Sembunyikan</button>
+      <button type="button" className="ghost sm" onClick={archive} aria-busy={busy} disabled={busy}>Sembunyikan</button>
       {error && <small className="neg">{error}</small>}
     </div>
   );

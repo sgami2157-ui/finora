@@ -14,5 +14,5 @@ export default function ReverseButton({ id }: { id: string }) {
     setBusy(false);
     if (error) alert(friendlyError(error.message)); else router.refresh();
   }
-  return <button onClick={run} disabled={busy}>Balik</button>;
+  return <button onClick={run} aria-busy={busy} disabled={busy}>Balik</button>;
 }

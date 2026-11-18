@@ -125,7 +125,7 @@ export default function InvoiceForm({
 
       {error && <div className="alert err" role="alert">{error}</div>}
       {ok && <div className="alert ok" role="status">{ok}</div>}
-      <button className="primary lg" disabled={busy || subtotal <= 0}>{busy ? "Menyimpan…" : c.submit}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || subtotal <= 0}>{busy ? "Menyimpan…" : c.submit}</button>
     </form>
   );
 }

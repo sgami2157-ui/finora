@@ -53,7 +53,7 @@ export function UploadForm({ businessId }: { businessId: string }) {
       <small className="hint">PDF, foto, CSV, atau Excel · maksimal 10 MB. Tersimpan privat, hanya bisa dibuka anggota bisnis Anda.</small>
       {error && <div className="alert err" role="alert">{error}</div>}
       {ok && <div className="alert ok" role="status">{ok}</div>}
-      <button className="primary lg" disabled={busy || !file}>{busy ? "Mengunggah…" : "Unggah dokumen"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || !file}>{busy ? "Mengunggah…" : "Unggah dokumen"}</button>
     </form>
   );
 }
@@ -80,8 +80,8 @@ export function DocRowActions({ id, path, name }: { id: string; path: string | n
   }
   return (
     <div className="inline-edit">
-      <button type="button" className="ghost sm" onClick={open} disabled={busy || !path}>Buka</button>
-      <button type="button" className="ghost sm" onClick={remove} disabled={busy}>Hapus</button>
+      <button type="button" className="ghost sm" onClick={open} aria-busy={busy} disabled={busy || !path}>Buka</button>
+      <button type="button" className="ghost sm" onClick={remove} aria-busy={busy} disabled={busy}>Hapus</button>
       {error && <small className="neg">{error}</small>}
     </div>
   );

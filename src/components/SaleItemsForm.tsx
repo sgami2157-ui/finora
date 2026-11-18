@@ -94,7 +94,7 @@ export default function SaleItemsForm({ businessId, products, cashAccounts, part
       <div className="total-bar"><span>Total</span><strong>Rp {Math.max(total, 0).toLocaleString("id-ID")}</strong></div>
       {error && <div className="alert err" role="alert">{error}</div>}
       {ok && <div className="alert ok" role="status">{ok}</div>}
-      <button className="primary lg" disabled={busy || subtotal <= 0}>{busy ? "Menyimpan…" : "Simpan penjualan"}</button>
+      <button className="primary lg" aria-busy={busy} disabled={busy || subtotal <= 0}>{busy ? "Menyimpan…" : "Simpan penjualan"}</button>
     </form>
   );
 }

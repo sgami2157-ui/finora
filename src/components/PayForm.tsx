@@ -54,7 +54,7 @@ export default function PayForm({
       </label>
       {error && <div className="alert err" role="alert">{error}</div>}
       <div className="pay-actions">
-        <button className="primary" disabled={busy}>{busy ? "Menyimpan…" : "Simpan"}</button>
+        <button className="primary" aria-busy={busy} disabled={busy}>{busy ? "Menyimpan…" : "Simpan"}</button>
         <button type="button" className="ghost" onClick={() => setOpen(false)}>Batal</button>
       </div>
     </form>
