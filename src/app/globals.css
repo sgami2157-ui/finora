@@ -395,3 +395,4 @@ html[data-hide="1"] .amt, html[data-hide="1"] td.num { filter: blur(7px); user-s
 
 .nav .nav-t { display: grid; padding: 0; min-height: 0; gap: 1px; min-width: 0; }
 .main .split + .split, .main .split + .panel { margin-top: 18px; }
+.inline-edit.wrap { flex-wrap: wrap; align-items: flex-end; } .mini { display: grid; gap: 4px; font-size: 12px; color: var(--muted); } .mini input { width: 130px; padding: 8px 10px; }

@@ -153,14 +153,17 @@ export function ProductActions({ businessId, products, cashAccounts }: { busines
   );
 }
 
-/** Ubah harga jual / arsipkan produk (tidak menyentuh stok). */
-export function ProductRowActions({ id, name, price }: { id: string; name: string; price: number }) {
+/** Ubah harga jual, batas stok minimum, atau arsipkan produk (tidak menyentuh stok). */
+export function ProductRowActions({ id, name, price, minStock }: { id: string; name: string; price: number; minStock: number }) {
   const router = useRouter();
   const [edit, setEdit] = useState(false); const [val, setVal] = useState(String(Math.round(price)));
+  const [min, setMin] = useState(minStock > 0 ? String(minStock) : "");
   const [busy, setBusy] = useState(false); const [error, setError] = useState<string | null>(null);
   async function save() {
+    const m = min.trim() === "" ? 0 : Number(min.replace(",", "."));
+    if (!Number.isFinite(m) || m < 0) return setError("Batas stok minimum harus berupa angka, 0 atau lebih.");
     setBusy(true); setError(null);
-    const { error: err } = await supabaseBrowser().from("products").update({ sell_price: Number(val) || 0, updated_at: new Date().toISOString() }).eq("id", id);
+    const { error: err } = await supabaseBrowser().from("products").update({ sell_price: Number(val) || 0, min_stock: m, updated_at: new Date().toISOString() }).eq("id", id);
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
     setEdit(false); router.refresh();
@@ -175,17 +178,18 @@ export function ProductRowActions({ id, name, price }: { id: string; name: strin
   }
   if (edit) {
     return (
-      <div className="inline-edit">
-        <MoneyInput value={val} onChange={setVal} />
+      <div className="inline-edit wrap">
+        <label className="mini">Harga jual<MoneyInput value={val} onChange={setVal} /></label>
+        <label className="mini">Stok minimum<input inputMode="decimal" value={min} onChange={(e) => setMin(e.target.value)} placeholder="mis. 5" aria-label="Stok minimum" /></label>
         <button type="button" className="primary sm" onClick={save} disabled={busy}>Simpan</button>
-        <button type="button" className="ghost sm" onClick={() => setEdit(false)}>Batal</button>
+        <button type="button" className="ghost sm" onClick={() => { setEdit(false); setError(null); }}>Batal</button>
         {error && <small className="neg">{error}</small>}
       </div>
     );
   }
   return (
     <div className="inline-edit">
-      <button type="button" className="ghost sm" onClick={() => setEdit(true)}>Ubah harga</button>
+      <button type="button" className="ghost sm" onClick={() => setEdit(true)}>Ubah</button>
       <button type="button" className="ghost sm" onClick={archive} disabled={busy}>Sembunyikan</button>
       {error && <small className="neg">{error}</small>}
     </div>

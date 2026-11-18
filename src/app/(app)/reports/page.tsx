@@ -27,7 +27,9 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   const balanced = assets === liab + eq;
   return (
     <>
-      <PageHead title="Laporan Keuangan" desc={`Periode ${fmtDate(from)} – ${fmtDate(to)} · dari jurnal yang sudah diposting.`} />
+      <PageHead title="Laporan Keuangan" desc={`Periode ${fmtDate(from)} – ${fmtDate(to)} · dari jurnal yang sudah diposting.`}>
+        <a className="btn ghost" href={`/api/export/balances?from=${from}&to=${to}`} download>Unduh CSV (saldo akun)</a>
+      </PageHead>
       <Callout title="Cara membaca laporan ini">
         <b>Laba Rugi</b> menjawab: &ldquo;sepanjang periode ini saya untung atau rugi?&rdquo; <b>Neraca</b> menjawab: &ldquo;apa saja yang dimiliki usaha dan apa yang masih menjadi utang?&rdquo; Anda tidak perlu menghafal istilahnya; tanda <b>?</b> menjelaskan setiap istilah.
       </Callout>
