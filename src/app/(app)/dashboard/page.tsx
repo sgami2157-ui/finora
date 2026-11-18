@@ -146,7 +146,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
             : <Empty icon="chart" title="Belum ada data untuk grafik" desc="Grafik terisi otomatis setelah ada penjualan atau biaya yang tercatat." />}
         </Panel>
         <div className="stack">
-          <Panel title="Perlu perhatian" action={<a className="btn ghost sm" href="/ai">Tanya AI</a>}>
+          <Panel title="Perlu perhatian" action={<a className="btn ghost sm" href="/analysis">Analisis lengkap</a>}>
             <Insights items={health.insights} limit={3} />
           </Panel>
           <Panel title="Piutang & utang">

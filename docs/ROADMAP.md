@@ -32,8 +32,8 @@ Semua transaksi menghasilkan jurnal otomatis lewat fungsi database.
 - ✅ Rata-rata tertimbang · pembayaran sebagian · arus kas · buku besar (cocok dengan account_balances, diuji) · validasi laporan (neraca seimbang, selisih arus kas).
 - ⬜ FIFO · rekonsiliasi bank · retur penjualan/pembelian · konfigurasi pajak · penutupan periode.
 
-## Phase 4 — AI
-- ✅ Edge Function ai-analyst (hanya membaca, batas 30 pertanyaan/jam). Mendukung Anthropic atau OpenAI; aktif setelah pemilik memasang kunci + nama model salah satunya (opsional `AI_PROVIDER`). Wawasan otomatis (non-AI) sudah berjalan.
+## Phase 4 — Analisis (AI dinonaktifkan)
+- ⏸ AI dinonaktifkan atas permintaan pemilik (biaya). Diganti halaman Analisis Bisnis berbasis aturan: rasio margin, tren 6 bulan, umur piutang/utang, biaya terbesar, margin produk.
 - ⬜ Prakiraan arus kas, deteksi pengeluaran tidak wajar berbasis model.
 
 ## Phase 5 — Pengalaman produk
@@ -41,5 +41,5 @@ Semua transaksi menghasilkan jurnal otomatis lewat fungsi database.
 - ⬜ Tema terang · ekspor Excel · notifikasi/pengingat jatuh tempo (lonceng baru menampilkan ringkasan).
 
 ## Phase 6 — Produksi
-- ✅ RLS, penjaga integritas, rate limit AI, indeks.
+- ✅ RLS, penjaga integritas, indeks.
 - ⬜ Backup/restore terjadwal · pemantauan error · manajemen pengguna/peran di UI · tes end-to-end dengan login.

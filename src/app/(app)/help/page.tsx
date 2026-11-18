@@ -27,7 +27,7 @@ const FAQ: [string, string][] = [
   ["Apakah saya harus paham akuntansi?", "Tidak. Cukup catat kejadian sehari-hari. Aplikasi menyusun jurnal dan laporan secara otomatis."],
   ["Apakah data saya aman?", "Data disimpan di basis data dengan pembatasan akses per pengguna sehingga hanya akun Anda yang dapat membacanya."],
   ["Mengapa transaksi tidak bisa dihapus?", "Agar riwayat keuangan tetap dapat diaudit. Gunakan fitur Balik jika ada kesalahan."],
-  ["Apakah AI Analyst selalu aktif?", "AI baru aktif setelah pemilik aplikasi memasang kunci layanannya. Jika belum, halaman AI menyatakannya dengan jelas. Bagian Perlu perhatian tetap bekerja tanpa AI."],
+  ["Apakah ada fitur AI?", "Saat ini tidak. Halaman Analisis Bisnis dihitung langsung dari jurnal dan faktur Anda (margin, tren, umur piutang/utang, biaya terbesar), tanpa layanan AI berbayar."],
 ];
 
 export default function HelpPage() {

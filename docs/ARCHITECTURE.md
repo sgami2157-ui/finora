@@ -19,7 +19,7 @@
 - **Backend utama:** Supabase (Auth, Postgres, RLS, Storage, Edge Functions).
 - **Mesin akuntansi:** modul TypeScript murni (`src/lib/accounting`) tanpa dependensi, diuji dengan `node:test`. Aturan penting (debit = kredit) **ditegakkan ganda**: di aplikasi dan di database (trigger).
 - **Penegakan di database:** jurnal berstatus `draft` → `posted`. Trigger menolak posting jika debit ≠ kredit, menolak ubah/hapus jurnal `posted`. Koreksi lewat fungsi `reverse_journal_entry`.
-- **AI Analyst:** Edge Function `ai-analyst`. Hanya membaca ringkasan data bisnis milik pengguna (token pengguna + RLS), API key hanya sebagai secret Edge Function.
+- **Analisis Bisnis:** halaman `/analysis`, dihitung di server dari RPC `account_balances`/`monthly_summary`, faktur, dan produk (RLS). Fitur AI (Edge Function `ai-analyst`) dinonaktifkan; tabel `ai_conversations` dipertahankan tanpa dipakai.
 - **Google Drive:** OAuth 2.0 server-side di Next.js API routes. Client Secret hanya di env server. Metadata file di tabel `attachments`/`integrations`.
 - **Macaly Cloud:** adapter `StorageProvider`/`CloudProvider` dengan status `not_verified` sampai diuji nyata.
 

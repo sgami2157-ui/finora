@@ -10,7 +10,7 @@ Aplikasi akuntansi double-entry untuk UMKM (Next.js + Supabase + Vercel). **Vers
 
 **Sudah ditulis tetapi BELUM dijalankan/diuji** (tidak ada akses jaringan saat pembuatan)
 - Aplikasi Next.js: login, daftar, pemulihan sandi, buat bisnis, dashboard (dari data jurnal), jurnal (buat/posting/balik), laporan (laba rugi, neraca, neraca saldo), pengaturan.
-- OAuth Google Drive server-side; Edge Function `ai-analyst`.
+- OAuth Google Drive server-side.
 - `npm install`, `npm run build`, `tsc` **belum pernah dijalankan** — kemungkinan ada galat tipe/impor kecil.
 - Migrasi belum diterapkan ke project Supabase sungguhan; belum ada deploy Vercel.
 
@@ -30,7 +30,7 @@ npm run dev
 2. Terapkan `supabase/migrations/0001..0005` berurutan (`supabase db push` atau SQL editor).
 3. Jalankan `supabase/tests/rls_test.sql` di staging — harus mencetak `SEMUA TES RLS & JURNAL LULUS`.
 4. Authentication → aktifkan Email; atur Site URL & Redirect URLs ke domain Anda.
-5. Edge Function: `supabase functions deploy ai-analyst` lalu pasang salah satu penyedia: `supabase secrets set ANTHROPIC_API_KEY=... ANTHROPIC_MODEL=...` **atau** `supabase secrets set OPENAI_API_KEY=... OPENAI_MODEL=...` (opsional `AI_PROVIDER=anthropic|openai` jika keduanya terpasang). Nama model diisi sendiri; kode tidak menebaknya.
+5. Fitur AI dinonaktifkan (biaya langganan). Halaman Analisis Bisnis memakai perhitungan biasa dari data Anda, tanpa layanan eksternal.
 
 ## Deploy Vercel
 1. Push repo ke GitHub, import di Vercel (framework Next.js terdeteksi).

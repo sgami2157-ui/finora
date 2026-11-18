@@ -25,7 +25,7 @@ const GROUPS: { title: string; items: Item[] }[] = [
   ] },
   { title: "Analisis", items: [
     { label: "Laporan Keuangan", icon: "chart", href: "/reports", sub: "Untung/rugi dan kekayaan usaha" },
-    { label: "AI Financial Analyst", icon: "sparkles", href: "/ai", sub: "Tanya kondisi usaha Anda" },
+    { label: "Analisis Bisnis", icon: "trend", href: "/analysis", sub: "Rasio, tren, umur piutang & utang" },
     { label: "Dokumen", icon: "folder", href: "/documents", sub: "Simpan struk dan nota" },
   ] },
   { title: "Pengelolaan", items: [{ label: "Pengaturan", icon: "settings", href: "/settings" }] },

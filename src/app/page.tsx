@@ -6,13 +6,13 @@ const FEATURES: { icon: IconName; title: string; desc: string; soon?: boolean }[
   { icon: "bank", title: "Kas & Bank", desc: "Pantau saldo kas dan rekening, transfer antar-akun, serta rekonsiliasi arus kas.", soon: true },
   { icon: "coin", title: "Piutang & Utang", desc: "Catat faktur, pembayaran sebagian, dan jatuh tempo agar arus kas tetap terkendali.", soon: true },
   { icon: "box", title: "Persediaan & HPP", desc: "Harga pokok rata-rata tertimbang, resep produk, dan analisis titik impas (BEP).", soon: true },
-  { icon: "sparkles", title: "AI Financial Analyst", desc: "Tanyakan angka bisnis Anda dalam bahasa sehari-hari. Analisis hanya memakai data yang Anda miliki.", soon: true },
+  { icon: "trend", title: "Analisis Bisnis", desc: "Margin, tren 6 bulan, umur piutang dan utang, biaya terbesar, dan margin produk — dihitung langsung dari data Anda." },
 ];
 
 const MODULES: [string, IconName, boolean][] = [
   ["Dashboard", "dashboard", true], ["Transaksi", "transfer", false], ["Jurnal Akuntansi", "book", true], ["Kas & Bank", "bank", false],
   ["Penjualan", "cart", false], ["Pembelian", "bag", false], ["Produk & Persediaan", "box", false], ["Piutang", "coin", false],
-  ["Utang", "banknote", false], ["Biaya Operasional", "wallet", false], ["Laporan Keuangan", "chart", true], ["AI Financial Analyst", "sparkles", false],
+  ["Utang", "banknote", false], ["Biaya Operasional", "wallet", false], ["Laporan Keuangan", "chart", true], ["Analisis Bisnis", "trend", false],
   ["Dokumen", "folder", false], ["Pengaturan", "settings", true],
 ];
 
