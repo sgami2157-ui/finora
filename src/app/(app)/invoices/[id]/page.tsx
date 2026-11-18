@@ -6,11 +6,12 @@ import { daysBetween, fmtDate, todayJakarta } from "@/lib/format";
 import { Badge, Callout, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
 import PayForm from "@/components/PayForm";
 import PrintButton from "@/components/PrintButton";
+import PrintSheet from "@/components/PrintSheet";
 
-const KIND: Record<string, { label: string; back: string; party: string; dir: "in" | "out"; pay: string }> = {
-  sale: { label: "Penjualan", back: "/sales", party: "Pelanggan", dir: "in", pay: "Pembayaran diterima" },
-  purchase: { label: "Pembelian", back: "/purchases", party: "Pemasok", dir: "out", pay: "Pembayaran dilakukan" },
-  expense: { label: "Biaya", back: "/expenses", party: "Vendor", dir: "out", pay: "Pembayaran dilakukan" },
+const KIND: Record<string, { label: string; doc: string; back: string; party: string; dir: "in" | "out"; pay: string }> = {
+  sale: { label: "Penjualan", doc: "FAKTUR PENJUALAN", back: "/sales", party: "Pelanggan", dir: "in", pay: "Pembayaran diterima" },
+  purchase: { label: "Pembelian", doc: "BUKTI PEMBELIAN", back: "/purchases", party: "Pemasok", dir: "out", pay: "Pembayaran dilakukan" },
+  expense: { label: "Biaya", doc: "BUKTI BIAYA", back: "/expenses", party: "Vendor", dir: "out", pay: "Pembayaran dilakukan" },
 };
 
 export default async function InvoiceDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -50,7 +51,8 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
   const entry = entryRes.data as { id: string; number: string; entry_date: string; description: string; status: string } | null;
 
   return (
-    <div className="print-area">
+    <>
+    <div className="screen-only">
       <PageHead title={`${k.label} ${inv.number}`} desc={`Tanggal ${fmtDate(inv.issue_date as string)}${inv.due_date ? ` · jatuh tempo ${fmtDate(inv.due_date as string)}` : ""}`}>
         <a className="btn ghost" href={k.back}>← Kembali</a>
         <PrintButton label="Cetak / simpan PDF" />
@@ -70,7 +72,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
             {inv.notes && <div><dt>Catatan</dt><dd>{inv.notes as string}</dd></div>}
           </dl>
           {left > 0 && (
-            <div className="noprint" style={{ marginTop: 14 }}>
+            <div style={{ marginTop: 14 }}>
               <PayForm invoiceId={id} outstanding={left / 100} cashAccounts={cash.map((c) => ({ id: c.id, name: c.name, kind: c.kind }))} direction={k.dir} />
             </div>
           )}
@@ -101,5 +103,33 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
         )}
       </Panel>
     </div>
+    <PrintSheet business={biz.name} title={k.doc} subtitle={`No. ${inv.number}`}>
+      <table className="pd-meta"><tbody>
+        <tr><th>Nomor</th><td>{inv.number as string}</td><th>Tanggal</th><td>{fmtDate(inv.issue_date as string)}</td></tr>
+        <tr><th>{k.party}</th><td>{(partyRes.data as { name: string } | null)?.name ?? "–"}</td><th>Jatuh tempo</th><td>{inv.due_date ? fmtDate(inv.due_date as string) : "–"}</td></tr>
+        <tr><th>Status</th><td>{left <= 0 ? "Lunas" : paid > 0 ? "Dibayar sebagian" : "Belum dibayar"}</td><th>Catatan</th><td>{(inv.notes as string) || "–"}</td></tr>
+      </tbody></table>
+      <table className="pt">
+        <thead><tr><th>Keterangan</th><th className="num">Jumlah</th></tr></thead>
+        <tbody>
+          <tr><td>Subtotal</td><td className="num">{idr(toCents(Number(inv.subtotal)))}</td></tr>
+          <tr><td>Diskon</td><td className="num">{idr(toCents(Number(inv.discount)))}</td></tr>
+          <tr className="tot"><td>Total</td><td className="num">{idr(total)}</td></tr>
+          <tr><td>{k.pay}</td><td className="num">{idr(paid)}</td></tr>
+          <tr className="tot"><td>Sisa yang harus {k.dir === "in" ? "diterima" : "dibayar"}</td><td className="num">{idr(left)}</td></tr>
+        </tbody>
+      </table>
+      {payments.length > 0 && (
+        <>
+          <h3 className="pd-h">Riwayat pembayaran</h3>
+          <table className="pt">
+            <thead><tr><th>Tanggal</th><th>Rekening</th><th className="num">Jumlah</th></tr></thead>
+            <tbody>{payments.map((p) => <tr key={p.id}><td>{fmtDate(p.paid_on)}</td><td>{cashName.get(p.cash_account_id) ?? "–"}</td><td className="num">{idr(toCents(Number(p.amount)))}</td></tr>)}</tbody>
+          </table>
+        </>
+      )}
+      <div className="pd-sign"><div><span>Dibuat oleh</span></div><div><span>{k.dir === "in" ? "Diterima oleh" : "Disetujui oleh"}</span></div></div>
+    </PrintSheet>
+    </>
   );
 }

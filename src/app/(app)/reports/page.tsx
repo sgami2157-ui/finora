@@ -3,6 +3,7 @@ import { getBusiness, getBalances, idr, sumBy, monthRange } from "@/lib/data";
 import { fmtDate } from "@/lib/format";
 import { Badge, Callout, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
 import PrintButton from "@/components/PrintButton";
+import PrintSheet from "@/components/PrintSheet";
 import { supabaseServer } from "@/lib/supabase/server";
 import { toCents } from "@/lib/accounting/money";
 
@@ -39,8 +40,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
   );
 
   const balanced = assets === liab + eq;
+  const pr = (l: string, v: number, bold = false) => <tr className={bold ? "tot" : undefined}><td>{l}</td><td className="num">{idr(v)}</td></tr>;
   return (
     <>
+    <div className="screen-only">
       <PageHead title="Laporan Keuangan" desc={`Periode ${fmtDate(from)} – ${fmtDate(to)} · dari jurnal yang sudah diposting.`}>
         <a className="btn ghost" href={`/api/export/balances?from=${from}&to=${to}`} download>Unduh CSV (saldo akun)</a>
         <PrintButton />
@@ -105,6 +108,39 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         )}
       </Panel>
       <p className="note-foot">Belum tersedia: buku besar per akun, ekspor Excel, dan simpan ke Google Drive. Untuk PDF, gunakan Cetak lalu pilih “Simpan sebagai PDF”.</p>
+    </div>
+    <PrintSheet business={biz.name} title="LAPORAN KEUANGAN" subtitle={`${fmtDate(from)} – ${fmtDate(to)}`}>
+      <h3 className="pd-h">Laba Rugi</h3>
+      <table className="pt"><tbody>
+        {pr("Pendapatan", revenue)}{pr("Harga pokok penjualan", cogs)}{pr("Laba kotor", revenue - cogs, true)}{pr("Beban operasional", exp)}{pr("Laba bersih", net, true)}
+      </tbody></table>
+      <h3 className="pd-h">Neraca per {fmtDate(to)}</h3>
+      <table className="pt"><tbody>
+        {pr("Total aset", assets, true)}{pr("Total kewajiban", liab)}{pr("Total ekuitas (termasuk laba berjalan)", eq)}{pr("Kewajiban + ekuitas", liab + eq, true)}
+      </tbody></table>
+      <h3 className="pd-h">Arus Kas</h3>
+      <table className="pt"><tbody>
+        {(["operasi", "investasi", "pendanaan"] as const).map((k) => cfSec(k).length > 0 && (
+          <Fragment key={k}>
+            <tr className="grp"><td colSpan={2}>{k === "operasi" ? "Dari kegiatan usaha" : k === "investasi" ? "Dari investasi" : "Dari pendanaan"}</td></tr>
+            {cfSec(k).map((r) => <tr key={r.label}><td className="ind">{r.label}</td><td className="num">{idr(r.cents)}</td></tr>)}
+          </Fragment>
+        ))}
+        {pr("Perubahan kas bersih", cfNet, true)}{pr("Saldo kas & bank awal", cfOpen)}{pr("Saldo kas & bank akhir", cfClose, true)}
+      </tbody></table>
+      {tbRows.length > 0 && (
+        <>
+          <h3 className="pd-h">Neraca Saldo per {fmtDate(to)}</h3>
+          <table className="pt">
+            <thead><tr><th>Akun</th><th className="num">Debit</th><th className="num">Kredit</th></tr></thead>
+            <tbody>
+              {tbRows.map((r) => { const isD = debitNormal(r.type) === r.cents >= 0; return <tr key={r.account_id}><td>{r.code} {r.name}</td><td className="num">{isD ? idr(Math.abs(r.cents)) : ""}</td><td className="num">{!isD ? idr(Math.abs(r.cents)) : ""}</td></tr>; })}
+              <tr className="tot"><td>Total</td><td className="num">{idr(tbD)}</td><td className="num">{idr(tbC)}</td></tr>
+            </tbody>
+          </table>
+        </>
+      )}
+    </PrintSheet>
     </>
   );
 }
