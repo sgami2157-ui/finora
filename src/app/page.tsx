@@ -1,4 +1,5 @@
 import { Icon, Logo, type IconName } from "@/components/Icon";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const FEATURES: { icon: IconName; title: string; desc: string }[] = [
   { icon: "book", title: "Pencatatan yang rapi", desc: "Setiap transaksi tercatat seimbang dan tidak bisa diubah diam-diam. Salah catat? Cukup dibalik, riwayatnya tetap utuh." },
@@ -58,6 +59,7 @@ export default function Home() {
             <a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a>
           </nav>
           <div className="lp-actions">
+            <ThemeToggle />
             <a className="btn ghost" href="/login">Masuk</a>
             <a className="btn primary" href="/register">Daftar</a>
           </div>

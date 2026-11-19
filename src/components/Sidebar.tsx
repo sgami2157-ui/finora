@@ -2,34 +2,10 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
-import { Icon, Logo, type IconName } from "./Icon";
-
-type Item = { label: string; icon: IconName; href: string; sub?: string };
-// Hanya halaman yang benar-benar ada. Dikelompokkan menurut cara kerja pemilik usaha.
-const GROUPS: { title: string; items: Item[] }[] = [
-  { title: "Ringkasan", items: [{ label: "Dashboard", icon: "dashboard", href: "/dashboard" }] },
-  { title: "Keuangan", items: [
-    { label: "Transaksi", icon: "transfer", href: "/transactions" },
-    { label: "Jurnal Akuntansi", icon: "book", href: "/journal", sub: "Catatan akuntansi lengkap" },
-    { label: "Kas & Bank", icon: "bank", href: "/cash" },
-    { label: "Buku Besar", icon: "book", href: "/ledger", sub: "Rincian per akun" },
-  ] },
-  { title: "Bisnis", items: [
-    { label: "Penjualan", icon: "cart", href: "/sales" },
-    { label: "Pembelian", icon: "bag", href: "/purchases" },
-    { label: "Biaya Operasional", icon: "wallet", href: "/expenses" },
-    { label: "Pelanggan & Pemasok", icon: "folder", href: "/parties", sub: "Kontak dan tagihannya" },
-    { label: "Produk & Persediaan", icon: "box", href: "/products", sub: "Barang dan stoknya" },
-    { label: "Piutang", icon: "coin", href: "/receivables", sub: "Pelanggan yang belum bayar" },
-    { label: "Utang", icon: "banknote", href: "/payables", sub: "Tagihan yang harus Anda bayar" },
-  ] },
-  { title: "Analisis", items: [
-    { label: "Laporan Keuangan", icon: "chart", href: "/reports", sub: "Untung/rugi dan kekayaan usaha" },
-    { label: "Analisis Bisnis", icon: "trend", href: "/analysis", sub: "Rasio, tren, umur piutang & utang" },
-    { label: "Dokumen", icon: "folder", href: "/documents", sub: "Simpan struk dan nota" },
-  ] },
-  { title: "Pengelolaan", items: [{ label: "Pengaturan", icon: "settings", href: "/settings" }] },
-];
+import { Icon, Logo } from "./Icon";
+import { NAV_GROUPS as GROUPS } from "@/lib/nav";
+import ThemeToggle from "./ThemeToggle";
+import SearchBar from "./SearchBar";
 
 export default function Sidebar({ businessName, userEmail }: { businessName: string | null; userEmail: string | null }) {
   const [open, setOpen] = useState(false);
@@ -65,9 +41,7 @@ export default function Sidebar({ businessName, userEmail }: { businessName: str
     <>
       <header className="topbar">
         <a href="/dashboard" aria-label="FINORA"><Logo size={30} /></a>
-        <button className="burger" onClick={() => setOpen(!open)} aria-label={open ? "Tutup menu" : "Buka menu"} aria-expanded={open} aria-controls="app-sidebar">
-          <span /><span /><span />
-        </button>
+        <div className="topbar-actions"><SearchBar variant="mobile" /><ThemeToggle /></div>
       </header>
       <div className={`scrim ${open ? "show" : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
       <aside id="app-sidebar" className={`sidebar ${open ? "open" : ""}`}>

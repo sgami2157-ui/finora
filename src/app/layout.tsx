@@ -14,11 +14,15 @@ export const metadata: Metadata = {
   icons: { icon: "/icon-192.png", apple: "/apple-touch-icon.png" },
   appleWebApp: { capable: true, title: "FINORA", statusBarStyle: "black-translucent" },
 };
+// Terapkan tema tersimpan sebelum cat pertama (tanpa kedip). Bawaan: gelap.
+const THEME_INIT = `try{var t=localStorage.getItem("finora:theme");if(t!=="light"&&t!=="dark")t="dark";document.documentElement.dataset.theme=t;if(t==="light"){var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute("content","#f6f7f9")}}catch(e){document.documentElement.dataset.theme="dark"}`;
+
 export const viewport: Viewport = { themeColor: "#FF8A3D", width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" className={font.variable}>
+    <html lang="id" className={font.variable} suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: THEME_INIT }} /></head>
       <body>{children}<NavLoader /><PwaRegister /></body>
     </html>
   );

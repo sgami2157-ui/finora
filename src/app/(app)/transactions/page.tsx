@@ -30,7 +30,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
           if (filter !== "all") qb = qb.eq("type", filter);
           if (from) qb = qb.gte("issue_date", from);
           if (to) qb = qb.lte("issue_date", to);
-          if (q) qb = qb.or(`number.ilike.%${q}%,notes.ilike.%${q}%`);
+          if (q) { const qs = q.replace(/[,()*%_\\:"']/g, " ").trim(); if (qs) qb = qb.or(`number.ilike.%${qs}%,notes.ilike.%${qs}%`); }
           return qb.order("issue_date", { ascending: false }).order("created_at", { ascending: false }).limit(60);
         })()
       : Promise.resolve({ data: [] as Inv[] }),
