@@ -9,6 +9,7 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
     { label: "Jurnal Akuntansi", icon: "book", href: "/journal", sub: "Catatan akuntansi lengkap" },
     { label: "Kas & Bank", icon: "bank", href: "/cash" },
     { label: "Buku Besar", icon: "book", href: "/ledger", sub: "Rincian per akun" },
+    { label: "Tutup Buku", icon: "lock", href: "/closing", sub: "Kunci bulan dan tahun" },
   ] },
   { title: "Bisnis", items: [
     { label: "Penjualan", icon: "cart", href: "/sales" },

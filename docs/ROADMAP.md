@@ -14,6 +14,9 @@ Legenda: ✅ selesai dan terverifikasi · 🟡 ada, verifikasi terbatas · ⬜ b
 | 0010 | **Penjaga integritas**: faktur/pembayaran hanya berubah lewat create_invoice/record_payment |
 | 0011 | Optimasi RLS (initplan), pecah kebijakan ganda business_members, indeks FK |
 | 0012 | ledger_report (buku besar + saldo berjalan) |
+| 0013 | push_subscriptions, backup_auto |
+| 0014 | record_owner_equity (setor modal / prive) |
+| 0015 | period_closings, close_month, close_year, reopen_period, pnl_net; laporan rentang mengecualikan jurnal penutup |
 
 Tes database rollback-only: `supabase/tests/` (lihat README di sana). Tes logika murni: `npm test` (18 tes lulus).
 
@@ -30,7 +33,8 @@ Semua transaksi menghasilkan jurnal otomatis lewat fungsi database.
 
 ## Phase 3 — Akuntansi lanjutan
 - ✅ Rata-rata tertimbang · pembayaran sebagian · arus kas · buku besar (cocok dengan account_balances, diuji) · validasi laporan (neraca seimbang, selisih arus kas).
-- ⬜ FIFO · rekonsiliasi bank · retur penjualan/pembelian · konfigurasi pajak · penutupan periode.
+- ⬜ FIFO · rekonsiliasi bank · retur penjualan/pembelian · konfigurasi pajak.
+- ✅ Penutupan periode: kunci bulanan + jurnal penutup tahunan ke Laba Ditahan + buka kembali berjejak (halaman /closing).
 
 ## Phase 4 — Analisis (AI dinonaktifkan)
 - ⏸ AI dinonaktifkan atas permintaan pemilik (biaya). Diganti halaman Analisis Bisnis berbasis aturan: rasio margin, tren 6 bulan, umur piutang/utang, biaya terbesar, margin produk.

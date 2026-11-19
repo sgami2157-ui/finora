@@ -8,6 +8,6 @@ export function friendlyError(raw: string | null | undefined): string {
   if (l.includes("jwt") || l.includes("not authenticated") || l.includes("invalid refresh token")) return "Sesi Anda berakhir. Silakan masuk kembali.";
   if (l.includes("duplicate key")) return "Data tersebut sudah ada.";
   if (l.includes("violates check constraint") || l.includes("invalid input syntax")) return "Ada isian yang tidak valid. Periksa kembali angka dan tanggalnya.";
-  if (l.includes("periode") && l.includes("terkunci")) return "Periode ini sudah ditutup, transaksi tidak bisa ditambah di tanggal tersebut.";
+  if (l.includes("periode") && (l.includes("terkunci") || l.includes("dikunci"))) return "Periode ini sudah ditutup, jadi transaksi tidak bisa ditambah atau diubah di tanggal tersebut. Pemilik dapat membukanya kembali di menu Tutup Buku.";
   return m;
 }

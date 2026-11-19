@@ -13,3 +13,4 @@ Hasil yang diharapkan: pesan error berawalan `ROLLBACK_OK` yang memuat ringkasan
 Tes aplikasi (logika murni): `npm test`.
 
 - `owner_equity.sql` — setoran modal & penarikan pemilik: saldo kas, Modal, Prive, jurnal seimbang, input tidak valid ditolak.
+- `period_closing.sql` — kunci bulan, tutup tahun, laporan & neraca tetap benar, buka kembali membalik penutupan, riwayat tidak bisa diubah.

@@ -21,7 +21,7 @@ export default async function AnalysisPage() {
   const [health, series, bal, inv, prod, cust, supp] = await Promise.all([
     loadHealth(biz.id),
     getMonthly(biz.id, 6),
-    getBalances(biz.id, null, null),
+    getBalances(biz.id, "1900-01-01", null),
     sb.from("invoices").select("type,total,paid,due_date,customer_id,supplier_id").eq("business_id", biz.id).is("deleted_at", null),
     sb.from("products").select("name,sell_price,stock_qty,stock_value,min_stock").eq("business_id", biz.id).is("deleted_at", null).limit(1000),
     sb.from("customers").select("id,name").eq("business_id", biz.id).limit(2000),
