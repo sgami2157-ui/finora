@@ -2,14 +2,15 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { getBusiness, getCashAccounts, idr } from "@/lib/data";
 import { toCents } from "@/lib/accounting/money";
 import { fmtDate } from "@/lib/format";
-import { NewCashAccountForm, TransferForm } from "@/components/CashForms";
+import { NewCashAccountForm, OwnerEquityForm, TransferForm } from "@/components/CashForms";
 import { Badge, Empty, Kpi, PageHead, Panel } from "@/components/ui";
 import { Icon } from "@/components/Icon";
 
 type Line = { entry_id: string; account_id: string; debit: number | string; credit: number | string };
 type Entry = { id: string; entry_date: string; description: string | null; number: string };
 
-export default async function CashPage() {
+export default async function CashPage({ searchParams }: { searchParams: Promise<{ jenis?: string }> }) {
+  const { jenis } = await searchParams;
   const biz = await getBusiness();
   if (!biz) {
     return (<><PageHead title="Kas & Bank" /><Empty icon="inbox" title="Buat bisnis terlebih dahulu"><a className="btn primary" href="/dashboard">Ke Dashboard</a></Empty></>);
@@ -17,6 +18,14 @@ export default async function CashPage() {
   const accounts = await getCashAccounts(biz.id);
   const total = accounts.reduce((s, a) => s + a.balance, 0);
   const bankTotal = accounts.filter((a) => a.kind === "bank").reduce((s, a) => s + a.balance, 0);
+
+  // Riwayat setoran modal & penarikan pemilik (nomor jurnal MD-/PV-)
+  const sbq = await supabaseServer();
+  const { data: eqRows } = await sbq.from("journal_entries").select("id,entry_date,number,description").eq("business_id", biz.id).or("number.like.MD-%,number.like.PV-%").order("entry_date", { ascending: false }).limit(8);
+  const eqIds = (eqRows ?? []).map((r) => r.id);
+  const { data: eqLines } = eqIds.length ? await sbq.from("journal_lines").select("entry_id,debit,credit").in("entry_id", eqIds).limit(100) : { data: [] as { entry_id: string; debit: number | string; credit: number | string }[] };
+  const eqAmt = new Map<string, number>();
+  for (const l of eqLines ?? []) eqAmt.set(l.entry_id, Math.max(eqAmt.get(l.entry_id) ?? 0, toCents(Number(l.debit)), toCents(Number(l.credit))));
 
   // Mutasi terbaru pada rekening kas/bank (tanpa embed, dua query sederhana).
   let moves: { entry: Entry; delta: number; account: string }[] = [];
@@ -87,6 +96,20 @@ export default async function CashPage() {
           </Panel>
         </div>
         <div className="stack">
+          {accounts.length > 0 && (
+            <div id="pemilik"><Panel title="Modal & penarikan pemilik" desc="Setor modal ke usaha atau tarik uang ke rekening pribadi">
+              <OwnerEquityForm businessId={biz.id} accounts={accounts.map((a) => ({ id: a.id, name: a.name, balance: a.balance }))} defaultKind={jenis === "tarik" ? "drawing" : "capital"} />
+              {(eqRows ?? []).length > 0 && (
+                <div className="table-wrap" style={{ marginTop: 12 }}><table>
+                  <thead><tr><th>Tanggal</th><th>Keterangan</th><th className="num">Jumlah</th></tr></thead>
+                  <tbody>{(eqRows ?? []).map((r) => (
+                    <tr key={r.id}><td>{fmtDate(r.entry_date)}</td><td>{r.description}</td>
+                      <td className="num"><Badge tone={r.number.startsWith("MD-") ? "pos" : "neg"}>{r.number.startsWith("MD-") ? "+" : "−"} {idr(eqAmt.get(r.id) ?? 0)}</Badge></td></tr>
+                  ))}</tbody>
+                </table></div>
+              )}
+            </Panel></div>
+          )}
           <Panel title="Tambah rekening"><NewCashAccountForm businessId={biz.id} /></Panel>
           {accounts.length >= 2 && <Panel title="Transfer antar rekening"><TransferForm businessId={biz.id} accounts={accounts.map((a) => ({ id: a.id, name: a.name }))} /></Panel>}
         </div>

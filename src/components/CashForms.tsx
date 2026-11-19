@@ -108,3 +108,60 @@ export function TransferForm({ businessId, accounts }: { businessId: string; acc
     </form>
   );
 }
+
+type CashBal = { id: string; name: string; balance: number };
+
+/** Setor modal / tarik ke rekening pribadi. Dicatat sebagai modal pemilik atau prive, bukan pendapatan/biaya. */
+export function OwnerEquityForm({ businessId, accounts, defaultKind = "capital" }: { businessId: string; accounts: CashBal[]; defaultKind?: "capital" | "drawing" }) {
+  const router = useRouter();
+  const [kind, setKind] = useState<"capital" | "drawing">(defaultKind);
+  const [acc, setAcc] = useState(accounts[0]?.id ?? "");
+  const [amount, setAmount] = useState("");
+  const [date, setDate] = useState(todayJakarta());
+  const [note, setNote] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [ok, setOk] = useState<string | null>(null);
+  const bal = accounts.find((a) => a.id === acc)?.balance ?? 0;   // dalam sen
+  const n = Number(amount) || 0;
+  const over = kind === "drawing" && Math.round(n * 100) > bal;
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null); setOk(null);
+    if (!(n > 0)) return setError("Nominal harus lebih dari nol.");
+    setBusy(true);
+    const { error: err } = await supabaseBrowser().rpc("record_owner_equity", {
+      p_business: businessId, p_cash_account: acc, p_kind: kind, p_amount: n, p_date: date, p_note: note.trim() || null,
+    });
+    setBusy(false);
+    if (err) return setError(friendlyError(err.message));
+    setOk(kind === "capital" ? "Setoran modal dicatat." : "Penarikan pemilik dicatat.");
+    setAmount(""); setNote("");
+    router.refresh();
+  }
+
+  return (
+    <form onSubmit={submit} className="form">
+      <div className="seg" role="radiogroup" aria-label="Jenis pencatatan">
+        <button type="button" role="radio" aria-checked={kind === "capital"} className={kind === "capital" ? "on" : ""} onClick={() => setKind("capital")}>Setor modal</button>
+        <button type="button" role="radio" aria-checked={kind === "drawing"} className={kind === "drawing" ? "on" : ""} onClick={() => setKind("drawing")}>Tarik ke rekening pribadi</button>
+      </div>
+      <label className="field"><span>{kind === "capital" ? "Masuk ke rekening usaha" : "Diambil dari rekening usaha"}</span>
+        <select value={acc} onChange={(e) => setAcc(e.target.value)}>{accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}</select>
+      </label>
+      <div className="grid-2">
+        <label className="field"><span>Nominal</span><MoneyInput value={amount} onChange={setAmount} required /></label>
+        <label className="field"><span>Tanggal</span><input type="date" value={date} onChange={(e) => setDate(e.target.value)} required /></label>
+      </div>
+      <label className="field"><span>Catatan (opsional)</span><input value={note} onChange={(e) => setNote(e.target.value)} maxLength={120} placeholder={kind === "capital" ? "Mis. tambahan modal dari tabungan" : "Mis. untuk kebutuhan pribadi"} /></label>
+      <small className="hint">{kind === "capital"
+        ? "Uang pribadi Anda yang dimasukkan ke usaha. Bukan penjualan, jadi tidak dihitung sebagai pendapatan."
+        : "Uang usaha yang Anda ambil untuk pribadi. Bukan biaya usaha, jadi tidak mengurangi laba — tercatat sebagai Prive dan mengurangi modal."}</small>
+      {over && <div className="alert err" role="status">Nominal melebihi saldo rekening ini. Pastikan penjualan atau setoran sebelumnya sudah dicatat.</div>}
+      {error && <div className="alert err" role="alert">{error}</div>}
+      {ok && <div className="alert ok" role="status">{ok}</div>}
+      <button className="primary lg" aria-busy={busy} disabled={busy || !amount || !acc}>{busy ? "Menyimpan…" : kind === "capital" ? "Catat setoran modal" : "Catat penarikan"}</button>
+    </form>
+  );
+}

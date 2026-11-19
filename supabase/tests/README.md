@@ -11,3 +11,5 @@ Hasil yang diharapkan: pesan error berawalan `ROLLBACK_OK` yang memuat ringkasan
 | `stock_integrity.sql` | Stok hanya berubah lewat fungsi; HPP rata-rata tertimbang dan jurnal HPP |
 
 Tes aplikasi (logika murni): `npm test`.
+
+- `owner_equity.sql` — setoran modal & penarikan pemilik: saldo kas, Modal, Prive, jurnal seimbang, input tidak valid ditolak.

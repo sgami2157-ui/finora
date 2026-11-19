@@ -9,6 +9,8 @@ const ACTIONS: { href: string; icon: IconName; title: string; sub: string }[] = 
   { href: "/receivables", icon: "coin", title: "Terima bayaran pelanggan", sub: "Pelanggan melunasi tagihan" },
   { href: "/payables", icon: "banknote", title: "Bayar utang", sub: "Lunasi tagihan pemasok" },
   { href: "/cash", icon: "transfer", title: "Pindah uang antar rekening", sub: "Mis. dari kas ke bank" },
+  { href: "/cash?jenis=modal#pemilik", icon: "plus", title: "Setor modal ke usaha", sub: "Uang pribadi masuk ke rekening usaha" },
+  { href: "/cash?jenis=tarik#pemilik", icon: "banknote", title: "Tarik ke rekening pribadi", sub: "Ambil uang usaha untuk pribadi (prive)" },
   { href: "/documents", icon: "folder", title: "Simpan foto struk / nota", sub: "Unggah bukti transaksi" },
 ];
 
