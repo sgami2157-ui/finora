@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./Icon";
+import Sparkline from "./Sparkline";
 
 /** Judul halaman + deskripsi + aksi opsional. */
 export function PageHead({ title, desc, children }: { title: string; desc?: string; children?: ReactNode }) {
@@ -16,8 +17,8 @@ export function PageHead({ title, desc, children }: { title: string; desc?: stri
 
 /** Kartu indikator (KPI). tone: warna nilai; hint: baris kecil di bawah nilai. */
 export function Kpi({
-  label, value, icon, tone, hint,
-}: { label: string; value: string; icon: IconName; tone?: "pos" | "neg" | "pri"; hint?: ReactNode }) {
+  label, value, icon, tone, hint, trend,
+}: { label: string; value: string; icon: IconName; tone?: "pos" | "neg" | "pri"; hint?: ReactNode; trend?: number[] }) {
   return (
     <div className="kpi">
       <div className="kpi-top">
@@ -26,6 +27,7 @@ export function Kpi({
       </div>
       <strong className={`amt ${tone ?? ""}`}>{value}</strong>
       {hint && <div className="kpi-hint">{hint}</div>}
+      {trend && <Sparkline values={trend} tone={tone === "neg" ? "neg" : tone === "pos" ? "pos" : "pri"} label={`Tren 6 bulan: ${label}`} />}
     </div>
   );
 }

@@ -487,3 +487,21 @@ html[data-theme="light"] .nav a.active { background: rgba(234,88,12,.09); }
 html[data-theme="light"] .skeleton { background: linear-gradient(90deg, rgba(15,23,42,.05), rgba(15,23,42,.1), rgba(15,23,42,.05)); background-size: 200% 100%; }
 html[data-theme="light"] .search-panel { box-shadow: var(--shadow), 0 16px 40px rgba(15,23,42,.14); }
 @media (max-width: 800px) { html[data-theme="light"] .sidebar { box-shadow: 8px 0 32px rgba(15,23,42,.2); } }
+
+/* --- Patch UI: sparkline, komposisi pendapatan, tombol ke atas --- */
+.spark { display: block; width: 100%; height: 34px; margin-top: 10px; overflow: visible; }
+.spark-line { stroke: var(--primary); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.spark-fill { fill: var(--primary); opacity: .10; }
+.spark-dot { fill: var(--primary); }
+.spark.pos .spark-line, .spark.pos .spark-dot { stroke: var(--success); fill: none; } .spark.pos .spark-dot { fill: var(--success); } .spark.pos .spark-fill { fill: var(--success); }
+.spark.neg .spark-line { stroke: var(--danger); } .spark.neg .spark-dot { fill: var(--danger); } .spark.neg .spark-fill { fill: var(--danger); }
+.compose { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--w06, rgba(255,255,255,.06)); }
+.compose .seg { display: block; height: 100%; transition: width .5s ease; }
+.seg.cogs, .dot.cogs { background: #8b7cf6; } .seg.opex, .dot.opex { background: var(--primary); } .seg.profit, .dot.profit { background: var(--success); }
+.compose-legend { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; }
+.compose-legend li { display: inline-flex; align-items: center; gap: 6px; } .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.scroll-top { position: fixed; right: 18px; bottom: 88px; z-index: 40; width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; padding: 0; background: var(--card-2); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow); cursor: pointer; animation: fadeUp .25s ease both; }
+.scroll-top:hover { border-color: var(--primary); color: var(--primary); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@media print { .scroll-top { display: none; } }
+@media (prefers-reduced-motion: reduce) { .scroll-top, .compose .seg { animation: none; transition: none; } }

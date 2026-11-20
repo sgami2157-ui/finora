@@ -125,11 +125,30 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       )}
 
       <div className="kpis kpis-4">
-        <Kpi label="Pendapatan bulan ini" value={idr(revenue)} icon="trend" tone="pri" hint={dRev && <span className={dRev.up ? "pos" : "neg"}>{dRev.text}</span>} />
-        <Kpi label="Untung bersih" value={idr(net)} icon="chart" tone={net >= 0 ? "pos" : "neg"} hint={dNet && <span className={dNet.up ? "pos" : "neg"}>{dNet.text}</span>} />
+        <Kpi label="Pendapatan bulan ini" value={idr(revenue)} icon="trend" tone="pri" trend={series.map((x) => x.revenue)} hint={dRev && <span className={dRev.up ? "pos" : "neg"}>{dRev.text}</span>} />
+        <Kpi label="Untung bersih" value={idr(net)} icon="chart" tone={net >= 0 ? "pos" : "neg"} trend={series.map((x) => x.revenue - x.cogs - x.expense)} hint={dNet && <span className={dNet.up ? "pos" : "neg"}>{dNet.text}</span>} />
         <Kpi label="Kas & bank" value={idr(kas + bank)} icon="wallet" hint={<a href="/cash">Lihat rekening →</a>} />
-        <Kpi label="Pengeluaran bulan ini" value={idr(expenses + cogs)} icon="banknote" />
+        <Kpi label="Pengeluaran bulan ini" value={idr(expenses + cogs)} icon="banknote" trend={series.map((x) => x.cogs + x.expense)} />
       </div>
+
+      {revenue > 0 && (() => {
+        const pct = (v: number) => Math.max(0, Math.min(100, (v / revenue) * 100));
+        const pc = pct(cogs), pe = Math.min(pct(expenses), 100 - pc), pp = Math.max(0, 100 - pc - pe);
+        const seg = [["Harga pokok", pc, "cogs", cogs], ["Biaya operasional", pe, "opex", expenses], [net >= 0 ? "Untung" : "", pp, "profit", Math.max(net, 0)]] as const;
+        return (
+          <Panel title="Ke mana pendapatan bulan ini?" desc="Porsi dari penjualan, berdasarkan jurnal terposting">
+            <div className="compose" role="img" aria-label={`Harga pokok ${Math.round(pc)}%, biaya ${Math.round(pe)}%, untung ${Math.round(pp)}% dari pendapatan`}>
+              {seg.map(([l, w, k]) => w > 0 && <span key={k} className={`seg ${k}`} style={{ width: `${w}%` }} />)}
+            </div>
+            <ul className="compose-legend">
+              {seg.filter(([l, w]) => l && (w as number) > 0).map(([l, w, k, v]) => (
+                <li key={k}><i className={`dot ${k}`} />{l} <b>{Math.round(w as number)}%</b> <span className="muted amt">{idr(v as number)}</span></li>
+              ))}
+            </ul>
+            {net < 0 && <p className="muted sm" style={{ marginTop: 8 }}>Pengeluaran melebihi pendapatan bulan ini sehingga tidak ada bagian untung.</p>}
+          </Panel>
+        );
+      })()}
 
       <div className="split wide-left">
         <Panel title="Arus kas" desc={`${RANGES.find(([k]) => k === gran)![1]} · ${n} periode terakhir`}

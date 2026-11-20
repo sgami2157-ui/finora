@@ -1,3 +1,4 @@
+import ScrollTop from "@/components/ScrollTop";
 import { supabaseServer } from "@/lib/supabase/server";
 import Sidebar from "@/components/Sidebar";
 import QuickAdd from "@/components/QuickAdd";
@@ -17,6 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {children}
       </main>
       {biz && <QuickAdd />}
+      <ScrollTop />
     </div>
   );
 }
