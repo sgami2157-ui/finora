@@ -15,9 +15,9 @@ export const metadata: Metadata = {
   appleWebApp: { capable: true, title: "FINORA", statusBarStyle: "black-translucent" },
 };
 // Terapkan tema tersimpan sebelum cat pertama (tanpa kedip). Bawaan: gelap.
-const THEME_INIT = `try{var t=localStorage.getItem("finora:theme");if(t!=="light"&&t!=="dark")t="dark";document.documentElement.dataset.theme=t;if(t==="light"){var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute("content","#f6f7f9")}}catch(e){document.documentElement.dataset.theme="dark"}`;
+const THEME_INIT = `try{var t=localStorage.getItem("finora:theme");if(t!=="light"&&t!=="dark")t="dark";document.documentElement.dataset.theme=t;var m=document.querySelectorAll('meta[name=theme-color]');for(var i=0;i<m.length;i++)m[i].setAttribute("content",t==="light"?"#f6f7f9":"#111318")}catch(e){document.documentElement.dataset.theme="dark"}`;
 
-export const viewport: Viewport = { themeColor: "#FF8A3D", width: "device-width", initialScale: 1, viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#111318", width: "device-width", initialScale: 1, viewportFit: "cover" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

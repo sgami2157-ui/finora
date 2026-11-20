@@ -2,8 +2,7 @@ import ScrollTop from "@/components/ScrollTop";
 import { supabaseServer } from "@/lib/supabase/server";
 import Sidebar from "@/components/Sidebar";
 import QuickAdd from "@/components/QuickAdd";
-import SearchBar from "@/components/SearchBar";
-import ThemeToggle from "@/components/ThemeToggle";
+import AppBar from "@/components/AppBar";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const sb = await supabaseServer();
@@ -14,7 +13,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <a href="#main" className="skip">Lewati ke konten</a>
       <Sidebar businessName={biz?.name ?? null} userEmail={u.user?.email ?? null} />
       <main className="main" id="main">
-        <div className="appbar"><SearchBar variant="desktop" /><ThemeToggle /></div>
+        <AppBar />
         {children}
       </main>
       {biz && <QuickAdd />}

@@ -4,8 +4,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { Icon, Logo } from "./Icon";
 import { NAV_GROUPS as GROUPS } from "@/lib/nav";
-import ThemeToggle from "./ThemeToggle";
-import SearchBar from "./SearchBar";
 
 export default function Sidebar({ businessName, userEmail }: { businessName: string | null; userEmail: string | null }) {
   const [open, setOpen] = useState(false);
@@ -39,10 +37,6 @@ export default function Sidebar({ businessName, userEmail }: { businessName: str
   }
   return (
     <>
-      <header className="topbar">
-        <a href="/dashboard" aria-label="FINORA"><Logo size={30} /></a>
-        <div className="topbar-actions"><SearchBar variant="mobile" /><ThemeToggle /></div>
-      </header>
       <div className={`scrim ${open ? "show" : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
       <aside id="app-sidebar" className={`sidebar ${open ? "open" : ""}`}>
         <div className="sb-top">

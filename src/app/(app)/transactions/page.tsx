@@ -3,6 +3,7 @@ import { getBusiness, idr } from "@/lib/data";
 import { toCents } from "@/lib/accounting/money";
 import { fmtDate } from "@/lib/format";
 import { Badge, Empty, PageHead, Panel } from "@/components/ui";
+import { Icon } from "@/components/Icon";
 
 type Inv = { id: string; type: string; number: string; issue_date: string; total: number | string; created_at: string; notes?: string | null };
 type Pay = { id: string; invoice_id: string; amount: number | string; paid_on: string; created_at: string };
@@ -66,7 +67,7 @@ export default async function TransactionsPage({ searchParams }: { searchParams:
       </PageHead>
       <form className="filter" action="/transactions">
         {filter !== "all" && <input type="hidden" name="type" value={filter} />}
-        <label className="field grow"><span>Cari nomor/catatan</span><input type="search" name="q" defaultValue={q} placeholder="Mis. INV-0001" maxLength={60} /></label>
+        <label className="field grow"><span>Cari nomor/catatan</span><div className="search-field"><Icon name="search" size={18} /><input type="search" name="q" defaultValue={q} placeholder="Mis. INV-0001" maxLength={60} enterKeyHint="search" /></div></label>
         <label className="field"><span>Dari</span><input type="date" name="from" defaultValue={from} /></label>
         <label className="field"><span>Sampai</span><input type="date" name="to" defaultValue={to} /></label>
         <button className="primary">Terapkan</button>
