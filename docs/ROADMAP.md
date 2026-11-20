@@ -47,3 +47,10 @@ Semua transaksi menghasilkan jurnal otomatis lewat fungsi database.
 ## Phase 6 — Produksi
 - ✅ RLS, penjaga integritas, indeks.
 - ⬜ Backup/restore terjadwal · pemantauan error · manajemen pengguna/peran di UI · tes end-to-end dengan login.
+
+## Patch keamanan (0016)
+- Migrasi 0016: `account_balances` kembali ber-`search_path` tetap; 13 indeks untuk foreign key.
+- Header: HSTS, Permissions-Policy, COOP, CSP dasar (frame-ancestors/base-uri/form-action/object-src), `no-store` untuk /api/*.
+- 2FA TOTP opsional (Pengaturan → Keamanan akun); sesi aal1 ditolak middleware bila akun punya faktor terverifikasi.
+- "Keluar dari semua perangkat", kebijakan kata sandi (≥10 karakter, huruf besar/kecil/angka), halaman Log Aktivitas (owner/admin).
+- Manual: aktifkan Leaked Password Protection di dashboard Supabase (Auth → Password security).

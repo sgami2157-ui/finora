@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import AuthShell from "@/components/AuthShell";
+import { passwordProblem } from "@/lib/password";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -13,7 +14,7 @@ export default function RegisterPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    if (password.length < 8) return setError("Kata sandi minimal 8 karakter.");
+    const pp = passwordProblem(password); if (pp) return setError(pp);
     const { error } = await supabaseBrowser().auth.signUp({
       email, password, options: { data: { full_name: name }, emailRedirectTo: `${location.origin}/login` },
     });

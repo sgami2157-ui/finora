@@ -5,6 +5,7 @@ import { Badge, Empty, PageHead, Panel } from "@/components/ui";
 import { fmtDate } from "@/lib/format";
 import BackupPanel from "./BackupPanel";
 import PushToggle from "@/components/PushToggle";
+import SecurityPanel from "@/components/SecurityPanel";
 
 const MESSAGES: Record<string, string> = {
   ok: "Google Drive berhasil terhubung dan terverifikasi.",
@@ -48,6 +49,9 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
             )}
           </Panel>
         )}
+        <Panel title="Keamanan akun" desc="Verifikasi dua langkah dan manajemen sesi">
+          <SecurityPanel />
+        </Panel>
         <Panel title="Notifikasi" desc="Pengingat tagihan jatuh tempo dan stok menipis">
           <PushToggle businessId={biz.id} publicKey={vapid} />
         </Panel>

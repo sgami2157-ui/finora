@@ -25,7 +25,7 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
     { label: "Analisis Bisnis", icon: "trend", href: "/analysis", sub: "Rasio, tren, umur piutang & utang" },
     { label: "Dokumen", icon: "folder", href: "/documents", sub: "Simpan struk dan nota" },
   ] },
-  { title: "Pengelolaan", items: [{ label: "Pengaturan", icon: "settings", href: "/settings" }] },
+  { title: "Pengelolaan", items: [{ label: "Pengaturan", icon: "settings", href: "/settings" }, { label: "Log Aktivitas", icon: "clipcheck", href: "/activity" }] },
 ];
 
 /** Halaman tambahan yang tidak ada di sidebar tetapi perlu bisa dicari. */
