@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Icon, type IconName } from "./Icon";
 import Sparkline from "./Sparkline";
+import CountUp from "./CountUp";
 
 /** Judul halaman + deskripsi + aksi opsional. */
 export function PageHead({ title, desc, children }: { title: string; desc?: string; children?: ReactNode }) {
@@ -25,7 +26,7 @@ export function Kpi({
         <span className="kpi-ico"><Icon name={icon} size={18} /></span>
         <span className="kpi-label">{label}</span>
       </div>
-      <strong className={`amt ${tone ?? ""}`}>{value}</strong>
+      <strong className={`amt ${tone ?? ""}`}><CountUp value={value} /></strong>
       {hint && <div className="kpi-hint">{hint}</div>}
       {trend && <Sparkline values={trend} tone={tone === "neg" ? "neg" : tone === "pos" ? "pos" : "pri"} label={`Tren 6 bulan: ${label}`} />}
     </div>

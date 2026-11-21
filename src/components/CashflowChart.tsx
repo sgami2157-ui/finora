@@ -46,7 +46,7 @@ export default function CashflowChart({ points, gran }: { points: PeriodPoint[];
             </g>
           );
         })}
-        <path d={line} className="cf-line" fill="none" />
+        <path d={line} className="cf-line" fill="none" pathLength={1} />
         {rows.map((r, i) => <circle key={r.period} cx={L + band * i + band / 2} cy={y(r.cashNet / 100)} r={dense ? 2.5 : 3.5} className="cf-dot" />)}
       </svg>
       <div className="legend"><span><i className="dot rev" />Pendapatan</span><span><i className="dot exp" />Pengeluaran (HPP + beban)</span><span><i className="dot net" />Arus kas bersih</span></div>

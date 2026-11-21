@@ -663,3 +663,31 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
 .rows > li { animation: fadeUp .3s ease backwards; } .rows > li:nth-child(2) { animation-delay: .03s; } .rows > li:nth-child(3) { animation-delay: .06s; } .rows > li:nth-child(4) { animation-delay: .09s; } .rows > li:nth-child(n+5) { animation-delay: .12s; }
 @media (prefers-reduced-motion: reduce) { .rows > li, .whats-new { animation: none; } }
 @media print { .whats-new { display: none; } }
+
+/* ===== Premium: grafik tergambar, FAB menu pegas, indikator navigasi ===== */
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+.chart .cf-line { stroke-dasharray: 1; animation: draw .9s .15s cubic-bezier(.4,0,.2,1) backwards; }
+.chart .bar-rev, .chart .bar-exp { transform-box: fill-box; transform-origin: bottom; animation: grow .55s cubic-bezier(.34,1.3,.64,1) backwards; }
+.chart .cf-dot { animation: pop .3s .7s ease backwards; transform-box: fill-box; transform-origin: center; }
+.countup { font-variant-numeric: tabular-nums; }
+
+.dial-backdrop { position: fixed; inset: 0; z-index: 48; background: rgba(0,0,0,.5); animation: fadein .18s ease-out; }
+.dial { position: fixed; z-index: 49; right: 24px; bottom: 90px; display: grid; gap: 10px; justify-items: end; }
+.dial-item { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); animation: dialIn .42s calc(var(--i) * 40ms) cubic-bezier(.34,1.56,.64,1) backwards; }
+.dial-label { background: var(--card-2, var(--card)); border: 1px solid var(--border); border-radius: 999px; padding: 8px 14px; font-weight: 600; font-size: 14px; box-shadow: var(--shadow); }
+.dial-ico { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--primary); color: #1a1006; box-shadow: var(--shadow); }
+.dial-item:hover .dial-label, .dial-item:focus-visible .dial-label { border-color: var(--primary); }
+.dial-more { justify-self: end; background: transparent; border: 0; color: #fff; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; padding: 6px 8px; animation: dialIn .42s calc(var(--i) * 40ms) cubic-bezier(.34,1.56,.64,1) backwards; }
+@keyframes dialIn { from { opacity: 0; transform: translateY(24px) scale(.7); } to { opacity: 1; transform: none; } }
+.fab svg, .bn-add svg { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+.fab.is-open svg, html[data-dial] .bn-add svg { transform: rotate(135deg); }
+@media (max-width: 800px) { .dial { right: 0; left: 0; bottom: calc(92px + env(safe-area-inset-bottom, 0px)); justify-items: center; } .dial-item { flex-direction: row-reverse; } .dial-more { justify-self: center; } .dial-backdrop { z-index: 48; } .bottom-nav { z-index: 50; } }
+.bottom-nav a, .bottom-nav button:not(.bn-add) { position: relative; }
+.bottom-nav a::before { content: ""; position: absolute; top: -6px; left: 50%; width: 22px; height: 3px; margin-left: -11px; border-radius: 0 0 3px 3px; background: var(--primary); transform: scaleX(0); transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
+.bottom-nav a.on::before { transform: scaleX(1); }
+.bottom-nav a svg { transition: transform .25s cubic-bezier(.34,1.56,.64,1); } .bottom-nav a.on svg { transform: translateY(-1px) scale(1.08); }
+@media (prefers-reduced-motion: reduce) { .chart .cf-line, .chart .bar-rev, .chart .bar-exp, .chart .cf-dot, .dial-item, .dial-more, .dial-backdrop { animation: none; } .chart .cf-line { stroke-dasharray: none; } .fab svg, .bn-add svg, .bottom-nav a::before, .bottom-nav a svg { transition: none; } }
+@media print { .dial, .dial-backdrop { display: none; } .chart .cf-line { stroke-dasharray: none; animation: none; } }
+.fab.is-open { z-index: 50; }
