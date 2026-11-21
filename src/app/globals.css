@@ -576,3 +576,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   .main > *, .main > * > *, .bell-body, .kpi, .panel, .row-card { animation: none !important; transition: none !important; }
 }
 @media print { .main > *, .main > * > * { animation: none !important; } .appbar { backdrop-filter: none; } }
+
+/* Perbaikan: panel notifikasi tertimpa kartu di bawahnya. Elemen beranimasi membentuk stacking context sendiri,
+   sehingga header halaman (tempat lonceng) harus diberi lapisan lebih tinggi dari kartu, tetapi di bawah bilah atas (z 15/20). */
+.main > .page-head { position: relative; z-index: 14; }
