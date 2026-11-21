@@ -19,7 +19,7 @@ export default function ThemeToggle({ className = "" }: { className?: string }) 
   const toLight = theme === "dark";
   return (
     <button type="button" className={`theme-toggle ${className}`} onClick={toggle} aria-label={toLight ? "Ganti ke mode terang" : "Ganti ke mode gelap"} title={toLight ? "Mode terang" : "Mode gelap"}>
-      <Icon name={toLight ? "sun" : "moon"} size={20} />
+      <span className="ico-sun"><Icon name="sun" size={20} /></span><span className="ico-moon"><Icon name="moon" size={20} /></span>
     </button>
   );
 }

@@ -495,7 +495,7 @@ html[data-theme="light"] .search-panel { box-shadow: var(--shadow), 0 16px 40px 
 .spark-dot { fill: var(--primary); }
 .spark.pos .spark-line, .spark.pos .spark-dot { stroke: var(--success); fill: none; } .spark.pos .spark-dot { fill: var(--success); } .spark.pos .spark-fill { fill: var(--success); }
 .spark.neg .spark-line { stroke: var(--danger); } .spark.neg .spark-dot { fill: var(--danger); } .spark.neg .spark-fill { fill: var(--danger); }
-.compose { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--w06, rgba(255,255,255,.06)); }
+.compose { display: flex; height: 14px; border-radius: 999px; overflow: hidden; background: var(--w08); }
 .compose .seg { display: block; height: 100%; transition: width .5s ease; }
 .seg.cogs, .dot.cogs { background: #8b7cf6; } .seg.opex, .dot.opex { background: var(--primary); } .seg.profit, .dot.profit { background: var(--success); }
 .compose-legend { list-style: none; margin: 12px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; }
@@ -505,3 +505,16 @@ html[data-theme="light"] .search-panel { box-shadow: var(--shadow), 0 16px 40px 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media print { .scroll-top { display: none; } }
 @media (prefers-reduced-motion: reduce) { .scroll-top, .compose .seg { animation: none; transition: none; } }
+
+/* Perbaikan: di HP hanya bilah atas (topbar) yang tampil; appbar desktop harus tetap tersembunyi.
+   Ditulis paling akhir agar tidak dikalahkan aturan .appbar { display: flex } di atas. */
+@media (max-width: 800px) { .appbar { display: none; } }
+
+/* Toggle tema: ikon mengikuti data-theme lewat CSS (tanpa kedipan saat hidrasi). */
+.theme-toggle .ico-sun, .theme-toggle .ico-moon { display: none; }
+html:not([data-theme="light"]) .theme-toggle .ico-sun { display: inline-flex; }
+html[data-theme="light"] .theme-toggle .ico-moon { display: inline-flex; }
+.theme-toggle { transition: background .15s, border-color .15s, transform .15s; }
+.theme-toggle:hover { border-color: var(--primary); }
+.theme-toggle:active { transform: scale(.94); }
+.theme-toggle:focus-visible { outline: none; box-shadow: var(--ring); }
