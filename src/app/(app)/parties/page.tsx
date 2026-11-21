@@ -2,6 +2,7 @@ import { supabaseServer } from "@/lib/supabase/server";
 import { getBusiness, idr } from "@/lib/data";
 import { toCents } from "@/lib/accounting/money";
 import { Badge, Callout, Empty, Kpi, PageHead, Panel } from "@/components/ui";
+import { Icon } from "@/components/Icon";
 import { AddPartyForm, PartyRowActions, type PartyTable } from "@/components/PartyForms";
 
 type Party = { id: string; name: string; phone: string | null; email: string | null; address: string | null };
@@ -45,7 +46,7 @@ export default async function PartiesPage({ searchParams }: { searchParams: Prom
       <div className="split">
         <Panel title={`Tambah ${lbl.toLowerCase()}`}><AddPartyForm businessId={biz.id} table={table} /></Panel>
         <Panel title={`Daftar ${lbl.toLowerCase()}`} action={
-          <form className="filter inline"><input type="hidden" name="t" value={table} /><input type="search" name="q" defaultValue={q} placeholder="Cari nama/telepon" aria-label="Cari" /><button className="ghost sm">Cari</button></form>
+          <form className="filter inline" role="search"><input type="hidden" name="t" value={table} /><div className="search-field"><Icon name="search" size={18} /><input type="search" name="q" defaultValue={q} placeholder="Cari nama/telepon" aria-label={`Cari ${lbl.toLowerCase()}`} maxLength={60} enterKeyHint="search" /></div>{q && <a className="btn ghost sm" href={`/parties?t=${table}`}>Reset</a>}</form>
         }>
           {pRes.error ? <Callout tone="warn">Daftar belum dapat dimuat. Coba muat ulang.</Callout> : rows.length === 0 ? (
             <Empty icon="folder" title={q ? "Tidak ditemukan" : `Belum ada ${lbl.toLowerCase()}`} desc={q ? "Coba kata kunci lain." : `Tambah lewat formulir, atau otomatis saat Anda mencatat ${isCus ? "penjualan" : "pembelian"} dengan nama baru.`} />
