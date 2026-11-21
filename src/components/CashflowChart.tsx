@@ -15,19 +15,24 @@ export default function CashflowChart({ points, gran }: { points: PeriodPoint[];
   const rows = points.map((p) => ({ ...p, exp: p.cogs + p.expense }));
   const vals = rows.flatMap((r) => [r.revenue, r.exp, r.cashNet]).map((v) => v / 100);
   const max = Math.max(1, ...vals), min = Math.min(0, ...vals);
-  const mag = Math.pow(10, Math.floor(Math.log10(Math.max(max, -min))));
-  const step = mag / 2;
+  // Skala "cantik": langkah 1/2/5 × 10^k, ±4 garis bantu, selalu memuat angka 0.
+  const raw = (max - min) / 4 || 1, pow = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = ([1, 2, 5, 10].find((m) => m * pow >= raw) ?? 10) * pow;
   const top = Math.ceil(max / step) * step, bot = Math.floor(min / step) * step;
   const iw = W - L - R, ih = H - T - B;
   const y = (v: number) => T + ih - ((v - bot) / (top - bot || 1)) * ih;
   const band = iw / rows.length, bw = Math.min(22, band / 3.2);
-  const ticks = [bot, (bot + top) / 2, top];
+  const ticks: number[] = []; for (let t = bot; t <= top + step / 2; t += step) ticks.push(Math.round(t * 100) / 100);
+  // Label sumbu-x dijarangkan agar tidak bertumpuk (maks. ±6 label; label terakhir selalu tampil).
+  const every = Math.max(1, Math.ceil(rows.length / 6));
+  const showLab = (i: number) => (rows.length - 1 - i) % every === 0;
+  const dense = rows.length > 10;
   const line = rows.map((r, i) => `${i ? "L" : "M"}${(L + band * i + band / 2).toFixed(1)},${y(r.cashNet / 100).toFixed(1)}`).join(" ");
   return (
     <div>
       <svg viewBox={`0 0 ${W} ${H}`} className="chart" role="img" aria-label={`Arus kas ${rows.length} periode. ` + rows.map((r) => `${lab(r.period, gran)}: pendapatan ${compactIDR(r.revenue / 100)}, pengeluaran ${compactIDR(r.exp / 100)}, arus kas bersih ${compactIDR(r.cashNet / 100)}`).join("; ")}>
         {ticks.map((t) => (
-          <g key={t}><line x1={L} x2={W - R} y1={y(t)} y2={y(t)} className="grid-line" /><text x={L - 8} y={y(t) + 4} textAnchor="end" className="axis">{compactIDR(t)}</text></g>
+          <g key={t}><line x1={L} x2={W - R} y1={y(t)} y2={y(t)} className={`grid-line ${t === 0 ? "zero" : ""}`} /><text x={L - 8} y={y(t) + 4} textAnchor="end" className="axis">{compactIDR(t)}</text></g>
         ))}
         {rows.map((r, i) => {
           const cx = L + band * i + band / 2;
@@ -37,12 +42,12 @@ export default function CashflowChart({ points, gran }: { points: PeriodPoint[];
               <rect x={cx - band / 2} y={T} width={band} height={ih} className="cf-hit" />
               <rect x={cx - bw - 1} y={y(r.revenue / 100)} width={bw} height={Math.max(0, y(0) - y(r.revenue / 100))} rx={3} className="bar-rev" />
               <rect x={cx + 1} y={y(r.exp / 100)} width={bw} height={Math.max(0, y(0) - y(r.exp / 100))} rx={3} className="bar-exp" />
-              <text x={cx} y={H - 9} textAnchor="middle" className="axis">{lab(r.period, gran)}</text>
+              {showLab(i) && <text x={cx} y={H - 9} textAnchor="middle" className="axis">{lab(r.period, gran)}</text>}
             </g>
           );
         })}
         <path d={line} className="cf-line" fill="none" />
-        {rows.map((r, i) => <circle key={r.period} cx={L + band * i + band / 2} cy={y(r.cashNet / 100)} r={3.5} className="cf-dot" />)}
+        {rows.map((r, i) => <circle key={r.period} cx={L + band * i + band / 2} cy={y(r.cashNet / 100)} r={dense ? 2.5 : 3.5} className="cf-dot" />)}
       </svg>
       <div className="legend"><span><i className="dot rev" />Pendapatan</span><span><i className="dot exp" />Pengeluaran (HPP + beban)</span><span><i className="dot net" />Arus kas bersih</span></div>
     </div>

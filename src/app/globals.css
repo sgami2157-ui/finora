@@ -604,3 +604,10 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   body:has(.search.open) .bottom-nav, body:has(.search.open) .fab,
   body:has(input:focus, select:focus, textarea:focus) .bottom-nav, body:has(input:focus, select:focus, textarea:focus) .fab { display: none !important; }
 }
+
+/* Grafik arus kas: garis nol tegas, batang lebih rapi; tombol ke atas lebih kecil agar tak menutupi konten */
+.chart .grid-line.zero { stroke: var(--w14); stroke-dasharray: none; }
+.chart .bar-rev, .chart .bar-exp { transition: opacity .15s; } .chart .cf-col:hover .bar-rev, .chart .cf-col:hover .bar-exp { opacity: .85; }
+.chart .cf-line { stroke-linejoin: round; stroke-linecap: round; }
+.scroll-top { width: 36px; height: 36px; opacity: .82; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); right: 14px; }
+@media (max-width: 800px) { .scroll-top { bottom: 96px; } .chart .axis { font-size: 15px; } }
