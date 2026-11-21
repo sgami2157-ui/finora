@@ -6,7 +6,6 @@ import { toCents } from "@/lib/accounting/money";
 import CashflowChart from "@/components/CashflowChart";
 import HideToggle from "@/components/HideToggle";
 import BellMenu from "@/components/BellMenu";
-import MonthlyChart from "@/components/MonthlyChart";
 import { Badge, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
 import { payState } from "@/components/InvoiceModule";
 import { Insights } from "@/components/Insights";
@@ -92,7 +91,6 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   const prevNet = prev ? prev.revenue - prev.cogs - prev.expense : 0;
   const dRev = delta(revenue, prev?.revenue ?? 0);
   const dNet = delta(net, prevNet);
-  const hasActivity = series.some((p) => p.revenue || p.cogs || p.expense) || sumBy(all, "asset") !== 0;
 
   const topExpenses = month.filter((r) => r.type === "expense" && r.cents > 0).sort((a, b) => b.cents - a.cents).slice(0, 5);
   const maxExp = topExpenses[0]?.cents ?? 1;
@@ -136,7 +134,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         return (
           <Panel title="Ke mana pendapatan bulan ini?" desc="Porsi dari penjualan, berdasarkan jurnal terposting">
             <div className="compose" role="img" aria-label={`Harga pokok ${Math.round(pc)}%, biaya ${Math.round(pe)}%, untung ${Math.round(pp)}% dari pendapatan`}>
-              {seg.map(([l, w, k]) => w > 0 && <span key={k} className={`seg ${k}`} style={{ width: `${w}%` }} />)}
+              {seg.map(([, w, k]) => w > 0 && <span key={k} className={`seg ${k}`} style={{ width: `${w}%` }} />)}
             </div>
             <ul className="compose-legend">
               {seg.filter(([l, w]) => l && (w as number) > 0).map(([l, w, k, v]) => (

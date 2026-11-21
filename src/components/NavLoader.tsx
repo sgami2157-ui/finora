@@ -16,7 +16,7 @@ export default function NavLoader() {
   const stop = () => { window.clearTimeout(timer.current); window.clearTimeout(guard.current); setShow(false); };
   const start = () => {
     window.clearTimeout(timer.current); window.clearTimeout(guard.current);
-    timer.current = window.setTimeout(() => setShow(true), 180);
+    timer.current = window.setTimeout(() => setShow(true), 700); // halaman punya loading.tsx sendiri; overlay hanya untuk muat lambat
     guard.current = window.setTimeout(stop, 20000); // pengaman bila navigasi dibatalkan
   };
 
