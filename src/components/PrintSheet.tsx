@@ -13,7 +13,7 @@ export default function PrintSheet({ business, title, subtitle, children }: { bu
         <div className="pd-title"><strong>{title}</strong>{subtitle && <span>{subtitle}</span>}</div>
       </header>
       <div className="pd-body">{children}</div>
-      <footer className="pd-foot">Dicetak {fmtDate(todayJakarta())} dari FINORA. Dokumen ini dihasilkan otomatis dari pembukuan yang sudah diposting.</footer>
+      <footer className="pd-foot"><span className="pd-foot-a4">Dicetak {fmtDate(todayJakarta())} dari FINORA. Dokumen ini dihasilkan otomatis dari pembukuan yang sudah diposting.</span><span className="pd-foot-th">Dicetak {fmtDate(todayJakarta())}<br />Terima kasih · FINORA</span></footer>
     </article>
   );
 }

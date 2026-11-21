@@ -55,7 +55,7 @@ export default async function InvoiceDetail({ params }: { params: Promise<{ id: 
     <div className="screen-only">
       <PageHead title={`${k.label} ${inv.number}`} desc={`Tanggal ${fmtDate(inv.issue_date as string)}${inv.due_date ? ` · jatuh tempo ${fmtDate(inv.due_date as string)}` : ""}`}>
         <a className="btn ghost" href={k.back}>← Kembali</a>
-        <PrintButton label="Cetak / simpan PDF" />
+        <PrintButton formats={["a4", "t80", "t58"]} />
       </PageHead>
       <div className="kpis">
         <Kpi label="Total tagihan" value={idr(total)} icon="coin" tone="pri" hint={badge} />

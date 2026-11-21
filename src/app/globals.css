@@ -568,7 +568,8 @@ html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
 
 
 /* Animasi masuk halaman (bertahap) */
-.main > .page-head, .main > .kpis > *, .main > .panel, .main > .split > *, .main > .stack > * { animation: fadeUp .38s ease both; }
+/* "backwards" (bukan "both"): setelah animasi selesai, transform dilepas sehingga elemen fixed di dalamnya tidak terjebak */
+.main > .page-head, .main > .kpis > *, .main > .panel, .main > .split > *, .main > .stack > * { animation: fadeUp .38s ease backwards; }
 .main > .kpis > *:nth-child(2) { animation-delay: .05s; } .main > .kpis > *:nth-child(3) { animation-delay: .1s; } .main > .kpis > *:nth-child(4) { animation-delay: .15s; }
 .main > .split > *:nth-child(2) { animation-delay: .08s; }
 
@@ -611,3 +612,45 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
 .chart .cf-line { stroke-linejoin: round; stroke-linecap: round; }
 .scroll-top { width: 36px; height: 36px; opacity: .82; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); right: 14px; }
 @media (max-width: 800px) { .scroll-top { bottom: 96px; } .chart .axis { font-size: 15px; } }
+
+/* ===== Menu cetak (layar) ===== */
+.print-menu { position: relative; }
+.print-pop { position: absolute; right: 0; top: calc(100% + 6px); z-index: 40; width: 300px; display: grid; gap: 6px; padding: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow); animation: popIn .16s ease both; transform-origin: top right; }
+.print-opt { display: grid; gap: 2px; text-align: left; padding: 10px 12px; border-radius: 10px; background: transparent; border: 1px solid transparent; color: var(--text); }
+.print-opt:hover { background: var(--w05); } .print-opt.on { border-color: var(--primary); }
+.print-opt small { color: var(--muted); font-size: 12px; font-weight: 400; }
+.print-note { margin: 2px 4px 4px; font-size: 11.5px; color: var(--muted); line-height: 1.45; }
+@media (max-width: 800px) { .print-pop { position: fixed; left: 12px; right: 12px; width: auto; top: auto; bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } }
+
+/* ===== Hasil cetak: A4 lebih rapi + struk thermal 80/58 mm ===== */
+@media print {
+  html { color-scheme: light !important; } html, body, .shell, .main { background: #fff !important; }
+  .print-doc, .print-doc * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pt thead { display: table-header-group; } .pt tfoot { display: table-footer-group; }
+  .pd-h, .pd-sign { break-inside: avoid; } .pd-foot-th { display: none; }
+  .print-doc { max-width: 100%; }
+
+  /* --- struk thermal: hitam-putih tegas, satu kolom sempit, tanpa warna latar --- */
+  html[data-print] .print-doc { font-family: "Courier New", ui-monospace, monospace; color: #000; font-size: var(--th-fs, 9pt); line-height: 1.35; width: 100%; }
+  html[data-print="t80"] { --th-fs: 9pt; --th-lab: 24mm; }
+  html[data-print="t58"] { --th-fs: 8pt; --th-lab: 21mm; }
+  html[data-print] .pd-head { display: block; text-align: center; padding-bottom: 4px; border-bottom: 1px dashed #000; margin-bottom: 6px; }
+  html[data-print] .pd-biz { font-size: calc(var(--th-fs) + 3pt); font-weight: 800; line-height: 1.2; }
+  html[data-print] .pd-sub { display: none; }
+  html[data-print] .pd-title { text-align: center; margin-top: 3px; } html[data-print] .pd-title strong { font-size: calc(var(--th-fs) + 1pt); letter-spacing: .03em; } html[data-print] .pd-title span { font-size: var(--th-fs); color: #000; }
+  html[data-print] .pd-h { font-size: var(--th-fs); margin: 8px 0 3px; border-bottom: 1px dashed #000; padding-bottom: 2px; text-transform: uppercase; }
+  html[data-print] .pd-meta, html[data-print] .pd-meta tbody { display: block; width: 100%; margin: 0 0 4px; }
+  html[data-print] .pd-meta tr { display: grid; grid-template-columns: var(--th-lab) minmax(0, 1fr); column-gap: 3px; }
+  html[data-print] .pd-meta th, html[data-print] .pd-meta td { display: block; width: auto; padding: 0; color: #000; font-size: var(--th-fs); overflow-wrap: anywhere; }
+  html[data-print] .pd-meta th { font-weight: 400; } html[data-print] .pd-meta th::after { content: ":"; } html[data-print] .pd-meta td { font-weight: 700; }
+  html[data-print] .pt { width: 100%; margin: 4px 0; border-top: 1px dashed #000; }
+  html[data-print] .pt th { font-size: calc(var(--th-fs) - .5pt); color: #000; border-bottom: 1px dashed #000; padding: 2px 0; letter-spacing: 0; }
+  html[data-print] .pt td { padding: 1.5px 0; border-bottom: 0; font-size: var(--th-fs); vertical-align: top; overflow-wrap: anywhere; }
+  html[data-print] .pt th, html[data-print] .pt td { padding-right: 4px; } html[data-print] .pt .num { padding-left: 4px; padding-right: 0; }
+  html[data-print] .pd-h + .pt { border-top: 0; }
+  html[data-print] .pt .tot td { font-weight: 800; border-top: 1px dashed #000; border-bottom: 0; }
+  html[data-print] .pt .grp td { background: none; font-weight: 800; }
+  html[data-print] .pd-sign { display: none; }
+  html[data-print] .pd-foot { margin-top: 8px; padding-top: 4px; border-top: 1px dashed #000; text-align: center; font-size: calc(var(--th-fs) - .5pt); color: #000; }
+  html[data-print] .pd-foot-a4 { display: none; } html[data-print] .pd-foot-th { display: block; }
+}
