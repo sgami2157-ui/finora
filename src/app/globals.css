@@ -518,3 +518,19 @@ html[data-theme="light"] .theme-toggle .ico-moon { display: inline-flex; }
 .theme-toggle:hover { border-color: var(--primary); }
 .theme-toggle:active { transform: scale(.94); }
 .theme-toggle:focus-visible { outline: none; box-shadow: var(--ring); }
+
+/* Kartu notifikasi: tidak terpotong di HP. Panel dipasang fixed selebar layar (bukan menempel pada tombol lonceng). */
+.insight > div { min-width: 0; flex: 1; }
+.insight strong, .insight p { overflow-wrap: anywhere; }
+.bell-body strong { overflow-wrap: anywhere; }
+@media (max-width: 800px) {
+  .bell { position: static; }
+  .bell-body { position: fixed; left: 12px; right: 12px; top: calc(env(safe-area-inset-top, 0px) + 68px); width: auto; max-height: calc(100dvh - 160px); border-radius: 16px; }
+  .insight { padding: 12px; gap: 10px; }
+}
+@media (max-width: 480px) {
+  .lp-actions { gap: 6px; } .lp-actions .btn { padding-left: 12px; padding-right: 12px; min-height: 40px; font-size: 14px; }
+  .lp-hero h1 { overflow-wrap: anywhere; }
+  .lp-cta { flex-direction: column; align-items: stretch; } .lp-cta .btn { justify-content: center; }
+}
+@media (max-width: 480px) { .lp-nav-in { padding: 0 14px; gap: 8px; } }
