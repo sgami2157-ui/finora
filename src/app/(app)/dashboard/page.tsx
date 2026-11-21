@@ -5,6 +5,7 @@ import { fmtDate, greeting, todayJakarta } from "@/lib/format";
 import { toCents } from "@/lib/accounting/money";
 import CashflowChart from "@/components/CashflowChart";
 import HideToggle from "@/components/HideToggle";
+import BellMenu from "@/components/BellMenu";
 import MonthlyChart from "@/components/MonthlyChart";
 import { Badge, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
 import { payState } from "@/components/InvoiceModule";
@@ -100,10 +101,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     <>
       <PageHead title={`${greeting()}${who ? ", " + who : ""}`} desc={`${biz.name} · Periode ${fmtDate(from)} – ${fmtDate(to)}`}>
         <HideToggle />
-        <details className="bell">
-          <summary aria-label="Pemberitahuan" title="Pemberitahuan">🔔{health.insights.length > 0 && <b>{health.insights.length}</b>}</summary>
-          <div className="bell-body"><strong>Pemberitahuan</strong><Insights items={health.insights} limit={5} /></div>
-        </details>
+        <BellMenu count={health.insights.length}><Insights items={health.insights} limit={5} /></BellMenu>
       </PageHead>
 
       <Panel className="summary">
