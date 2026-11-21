@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
+import { IDLE_DEFAULT, IDLE_KEY } from "./IdleGuard";
 
 /** Keamanan akun: 2FA TOTP (opsional) dan keluar dari semua perangkat. Semua status berasal dari Supabase Auth. */
 export default function SecurityPanel() {
@@ -10,6 +11,9 @@ export default function SecurityPanel() {
   const [enroll, setEnroll] = useState<{ id: string; qr: string; secret: string } | null>(null);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
+  const [idle, setIdle] = useState<number>(IDLE_DEFAULT);
+  useEffect(() => { try { const v = localStorage.getItem(IDLE_KEY); if (v !== null) setIdle(Number(v) || 0); } catch { /* abaikan */ } }, []);
+  function saveIdle(v: number) { setIdle(v); try { localStorage.setItem(IDLE_KEY, String(v)); } catch { /* abaikan */ } }
   const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
 
   async function load() {
@@ -80,6 +84,11 @@ export default function SecurityPanel() {
         </form>
       )}
       <hr style={{ border: 0, borderTop: "1px solid var(--w10, rgba(255,255,255,.1))", margin: "12px 0" }} />
+      <label className="muted sm">Keluar otomatis saat tidak aktif (perangkat ini)
+        <select value={idle} onChange={(e) => saveIdle(Number(e.target.value))}>
+          <option value={15}>15 menit</option><option value={30}>30 menit</option><option value={60}>60 menit</option><option value={0}>Nonaktif</option>
+        </select>
+      </label>
       <p className="muted sm">Curiga akun dipakai orang lain, atau perangkat hilang? Akhiri semua sesi login.</p>
       <button className="ghost" disabled={busy} onClick={signOutAll}>Keluar dari semua perangkat</button>
     </div>

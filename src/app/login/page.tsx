@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import AuthShell from "@/components/AuthShell";
@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [mfa, setMfa] = useState<{ factorId: string } | null>(null);
   const [code, setCode] = useState("");
+  useEffect(() => { if (new URLSearchParams(location.search).get("idle")) setInfo("Anda keluar otomatis karena tidak aktif. Silakan masuk kembali."); }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

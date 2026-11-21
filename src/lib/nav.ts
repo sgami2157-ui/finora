@@ -29,4 +29,4 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
 ];
 
 /** Halaman tambahan yang tidak ada di sidebar tetapi perlu bisa dicari. */
-export const EXTRA_PAGES: NavItem[] = [{ label: "Pusat Bantuan", icon: "help", href: "/help", sub: "Panduan dan tanya jawab" }];
+export const EXTRA_PAGES: NavItem[] = [{ label: "Pusat Bantuan", icon: "help", href: "/help", sub: "Panduan dan tanya jawab" }, { label: "Yang Baru", icon: "sparkles", href: "/changelog", sub: "Catatan rilis dan versi aplikasi" }];

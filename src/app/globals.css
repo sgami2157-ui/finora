@@ -654,3 +654,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
   html[data-print] .pd-foot { margin-top: 8px; padding-top: 4px; border-top: 1px dashed #000; text-align: center; font-size: calc(var(--th-fs) - .5pt); color: #000; }
   html[data-print] .pd-foot-a4 { display: none; } html[data-print] .pd-foot-th { display: block; }
 }
+
+/* ===== v2.0: spanduk "Yang Baru", catatan rilis, animasi daftar ===== */
+.whats-new { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin: 0 0 16px; padding: 10px 14px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--primary) 40%, var(--border)); background: color-mix(in srgb, var(--primary) 9%, var(--card)); font-size: 13.5px; animation: fadeUp .35s ease backwards; }
+.wn-actions { display: inline-flex; align-items: center; gap: 12px; }
+.rel-group + .rel-group { margin-top: 14px; } .rel-group h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 6px; }
+.rel-group ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; } .rel-group li { line-height: 1.5; overflow-wrap: anywhere; }
+.rows > li { animation: fadeUp .3s ease backwards; } .rows > li:nth-child(2) { animation-delay: .03s; } .rows > li:nth-child(3) { animation-delay: .06s; } .rows > li:nth-child(4) { animation-delay: .09s; } .rows > li:nth-child(n+5) { animation-delay: .12s; }
+@media (prefers-reduced-motion: reduce) { .rows > li, .whats-new { animation: none; } }
+@media print { .whats-new { display: none; } }

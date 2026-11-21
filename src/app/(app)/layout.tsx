@@ -3,6 +3,8 @@ import { supabaseServer } from "@/lib/supabase/server";
 import Sidebar from "@/components/Sidebar";
 import QuickAdd from "@/components/QuickAdd";
 import AppBar from "@/components/AppBar";
+import WhatsNew from "@/components/WhatsNew";
+import IdleGuard from "@/components/IdleGuard";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const sb = await supabaseServer();
@@ -14,10 +16,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <Sidebar businessName={biz?.name ?? null} userEmail={u.user?.email ?? null} />
       <main className="main" id="main">
         <AppBar />
+        <WhatsNew />
         {children}
       </main>
       {biz && <QuickAdd />}
       <ScrollTop />
+      <IdleGuard />
     </div>
   );
 }
