@@ -18,6 +18,7 @@ export default function AuthShell({ mode, children }: { mode: "login" | "registe
         <small>© 2026 FINORA</small>
       </aside>
       <section className="auth-form">
+        <a href="/" className="auth-back" aria-label="Kembali ke halaman utama"><span aria-hidden="true">←</span> Kembali</a>
         <div className="auth-box">{children}</div>
       </section>
     </div>

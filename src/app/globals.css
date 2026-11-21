@@ -691,3 +691,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
 @media (prefers-reduced-motion: reduce) { .chart .cf-line, .chart .bar-rev, .chart .bar-exp, .chart .cf-dot, .dial-item, .dial-more, .dial-backdrop { animation: none; } .chart .cf-line { stroke-dasharray: none; } .fab svg, .bn-add svg, .bottom-nav a::before, .bottom-nav a svg { transition: none; } }
 @media print { .dial, .dial-backdrop { display: none; } .chart .cf-line { stroke-dasharray: none; animation: none; } }
 .fab.is-open { z-index: 50; }
+
+/* Tombol kembali di halaman masuk/daftar */
+.auth-form { position: relative; }
+.auth-back { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); left: 16px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--text); font-weight: 600; font-size: 14px; text-decoration: none; transition: border-color .15s, transform .15s, background .15s; }
+.auth-back:hover { border-color: var(--primary); } .auth-back:active { transform: scale(.96); }
+.auth-back span { transition: transform .2s ease; } .auth-back:hover span { transform: translateX(-3px); }
