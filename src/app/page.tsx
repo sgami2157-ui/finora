@@ -1,5 +1,6 @@
 import { Icon, Logo, type IconName } from "@/components/Icon";
 import ThemeToggle from "@/components/ThemeToggle";
+import LandingDemo from "@/components/LandingDemo";
 
 const FEATURES: { icon: IconName; title: string; desc: string }[] = [
   { icon: "book", title: "Pencatatan yang rapi", desc: "Setiap transaksi tercatat seimbang dan tidak bisa diubah diam-diam. Salah catat? Cukup dibalik, riwayatnya tetap utuh." },
@@ -56,7 +57,7 @@ export default function Home() {
         <div className="lp-nav-in">
           <a href="/" aria-label="FINORA"><Logo size={34} /></a>
           <nav className="lp-links" aria-label="Navigasi utama">
-            <a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a>
+            <a href="#coba">Coba simulasi</a><a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a>
           </nav>
           <div className="lp-actions">
             <ThemeToggle />
@@ -73,7 +74,7 @@ export default function Home() {
           <p className="lead">Catat penjualan, pembelian, dan biaya dengan mudah. FINORA menyusun laporan keuangan Anda secara otomatis dalam Rupiah — tanpa perlu belajar akuntansi.</p>
           <div className="lp-cta">
             <a className="btn primary lg" href="/register">Mulai sekarang <Icon name="arrow" /></a>
-            <a className="btn ghost lg" href="/login">Masuk</a>
+            <a className="btn ghost lg" href="#coba">Coba simulasi</a>
           </div>
 
           <div className="mock" aria-hidden="true">
@@ -100,6 +101,11 @@ export default function Home() {
         {PRINCIPLES.map(([ic, t, d]) => (
           <div className="principle" key={t}><Icon name={ic} size={22} className="pri" /><div><b>{t}</b><small>{d}</small></div></div>
         ))}
+      </div></section>
+
+      <section id="coba" className="lp-sec alt"><div className="lp-wrap">
+        <Head eyebrow="Coba sekarang" title="Rasakan caranya dalam 1 menit" sub="Catat beberapa transaksi dan lihat laporan untung rugi serta neraca tersusun sendiri. Tanpa daftar." />
+        <LandingDemo />
       </div></section>
 
       <section id="fitur" className="lp-sec"><div className="lp-wrap">
@@ -150,7 +156,7 @@ export default function Home() {
       <footer className="lp-foot"><div className="lp-wrap">
         <div className="foot-row">
           <div><Logo size={32} /><p>Pembukuan dan laporan keuangan untuk UMKM Indonesia.</p></div>
-          <div><b>Produk</b><a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a></div>
+          <div><b>Produk</b><a href="#coba">Coba simulasi</a><a href="#fitur">Fitur</a><a href="#cara-kerja">Cara kerja</a><a href="#keamanan">Keamanan</a></div>
           <div><b>Akun</b><a href="/login">Masuk</a><a href="/register">Daftar</a></div>
         </div>
         <div className="foot-copy"><span>© 2026 FINORA. Seluruh hak dilindungi.</span><span>Dibuat untuk UMKM Indonesia.</span></div>
