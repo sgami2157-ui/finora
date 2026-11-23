@@ -729,3 +729,12 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: non
 .mock .pair i { transform-origin: bottom; animation: grow .7s cubic-bezier(.34,1.3,.64,1) backwards; }
 @media (max-width: 800px) { .demo-grid { grid-template-columns: 1fr; } .demo-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .demo-kpis > div, .demo-panel, .demo-warn, .demo-cta, .mock .pair i { animation: none; } .demo-steps li span { transition: none; } }
+
+/* ===== Notifikasi singkat (toast) ===== */
+.toasts { position: fixed; z-index: 90; left: 50%; transform: translateX(-50%); bottom: calc(96px + env(safe-area-inset-bottom, 0px)); display: grid; gap: 8px; width: min(92vw, 380px); pointer-events: none; }
+@media (min-width: 801px) { .toasts { bottom: 28px; } }
+.toast { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--card-2, var(--card)); border: 1px solid var(--border); box-shadow: var(--shadow); font-weight: 600; font-size: 14px; animation: dialIn .4s cubic-bezier(.34,1.56,.64,1) backwards; }
+.toast svg { flex: none; stroke-dasharray: 1; animation: draw .45s .12s ease-out backwards; } .toast.ok svg { stroke: var(--success); } .toast.err svg { stroke: var(--danger); }
+.toast.ok { border-color: color-mix(in srgb, var(--success) 40%, var(--border)); } .toast.err { border-color: color-mix(in srgb, var(--danger) 45%, var(--border)); }
+@media (prefers-reduced-motion: reduce) { .toast, .toast svg { animation: none; } .toast svg { stroke-dasharray: none; } }
+@media print { .toasts { display: none; } }

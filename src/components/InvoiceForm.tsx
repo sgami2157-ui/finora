@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -57,7 +58,7 @@ export default function InvoiceForm({
     if (err) return setError(friendlyError(err.message));
     setOk(c.ok);
     setAmount(""); setDiscount(""); setNotes(""); setParty(""); setDue("");
-    router.refresh();
+    toast("Faktur dicatat."); router.refresh();
   }
 
   return (

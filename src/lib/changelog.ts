@@ -1,9 +1,16 @@
 /** Versi aplikasi dan catatan rilis. Hanya memuat hal yang benar-benar sudah ada di kode. */
-export const APP_VERSION = "2.0.0";
+export const APP_VERSION = "2.1.0";
 
 export type Release = { version: string; date: string; title: string; groups: { label: string; items: string[] }[] };
 
 export const RELEASES: Release[] = [
+  {
+    version: "2.1.0", date: "2026-11-23", title: "Pemulihan akun dan umpan balik",
+    groups: [
+      { label: "Keamanan", items: ["Halaman “Buat kata sandi baru” untuk tautan pemulihan di email; semua perangkat dikeluarkan setelah kata sandi diganti."] },
+      { label: "Kenyamanan", items: ["Notifikasi singkat dengan animasi centang setelah mencatat transaksi, faktur, pembayaran, jurnal, stok, dan dokumen.", "Simulasi pembukuan interaktif di halaman awal; tombol Kembali di halaman masuk dan daftar."] },
+    ],
+  },
   {
     version: "2.0.0", date: "2026-11-21", title: "Lebih aman, lebih halus, lebih lengkap",
     groups: [

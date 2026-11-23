@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { friendlyError } from "@/lib/friendly";
 import { todayJakarta } from "@/lib/format";
 import { useState } from "react";
@@ -39,7 +40,7 @@ export default function JournalForm({ businessId, accounts }: { businessId: stri
     setBusy(false);
     if (error) return setError(friendlyError(error.message));
     setDescription(""); setLines([empty(), empty()]);
-    router.refresh();
+    toast("Jurnal dicatat."); router.refresh();
   }
 
   return (

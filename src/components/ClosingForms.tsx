@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -16,7 +17,7 @@ function useAction(onDone: () => void) {
     const { error: err } = await fn();
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setOk(success); onDone(); router.refresh();
+    setOk(success); toast(success); onDone(); router.refresh();
   }
   return { busy, error, ok, run };
 }

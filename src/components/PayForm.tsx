@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -40,7 +41,7 @@ export default function PayForm({
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
     setOpen(false);
-    router.refresh();
+    toast("Pembayaran dicatat."); router.refresh();
   }
 
   return (

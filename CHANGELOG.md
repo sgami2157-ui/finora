@@ -1,5 +1,8 @@
 # Catatan rilis FINORA
 
+## 2.1.0 — 2026-11-23
+Halaman pemulihan kata sandi (/reset-password); notifikasi sukses beranimasi setelah transaksi; simulasi di halaman awal.
+
 ## 2.0.0 — 2026-11-21
 **Keamanan:** 2FA TOTP opsional; keluar dari semua perangkat; keluar otomatis saat tidak aktif; kata sandi ≥10 karakter; header HSTS/Permissions-Policy/CSP dasar/COOP/CORP; Log Aktivitas; penutupan periode terkunci di database.
 **Akuntansi:** Tutup Buku bulanan/tahunan; setor modal & prive; buku besar saldo berjalan; laporan arus kas.

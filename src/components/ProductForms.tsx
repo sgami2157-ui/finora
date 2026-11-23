@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -29,7 +30,7 @@ function NewProduct({ businessId }: { businessId: string }) {
     const { error: err } = await supabaseBrowser().rpc("create_product", { p_business: businessId, p_name: name, p_sku: sku || null, p_price: Number(price) || 0 });
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setOk("Produk ditambahkan. Lanjut isi stoknya di tab “Tambah stok”."); setName(""); setSku(""); setPrice(""); router.refresh();
+    toast("Produk ditambahkan."); setOk("Produk ditambahkan. Lanjut isi stoknya di tab “Tambah stok”."); setName(""); setSku(""); setPrice(""); router.refresh();
   }
   return (
     <form onSubmit={submit} className="form">
@@ -64,7 +65,7 @@ function StockIn({ businessId, products, cashAccounts }: { businessId: string; p
     });
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setOk("Stok bertambah dan pembelian sudah dicatat."); setQty(""); setCost(""); setSupplier(""); setDue(""); router.refresh();
+    toast("Stok bertambah."); setOk("Stok bertambah dan pembelian sudah dicatat."); setQty(""); setCost(""); setSupplier(""); setDue(""); router.refresh();
   }
   return (
     <form onSubmit={submit} className="form">
@@ -113,7 +114,7 @@ function Adjust({ businessId, products }: { businessId: string; products: Prod[]
     });
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setOk("Stok disesuaikan dan selisihnya dicatat."); setCount(""); setCost(""); setReason(""); router.refresh();
+    toast("Stok disesuaikan."); setOk("Stok disesuaikan dan selisihnya dicatat."); setCount(""); setCost(""); setReason(""); router.refresh();
   }
   return (
     <form onSubmit={submit} className="form">

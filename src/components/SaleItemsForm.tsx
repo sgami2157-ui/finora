@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -48,7 +49,7 @@ export default function SaleItemsForm({ businessId, products, cashAccounts, part
     if (err) return setError(friendlyError(err.message));
     setOk("Penjualan tersimpan. Stok berkurang dan modal barang (HPP) dicatat otomatis.");
     setRows([{ key: Date.now(), product: first?.id ?? "", qty: "1", price: String(Math.round(first?.sell_price ?? 0)) }]); setDiscount(""); setNotes(""); setParty(""); setDue("");
-    router.refresh();
+    toast("Penjualan dicatat."); router.refresh();
   }
 
   return (

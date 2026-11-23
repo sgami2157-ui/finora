@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -39,7 +40,7 @@ export function UploadForm({ businessId }: { businessId: string }) {
       business_id: businessId, category, file_name: file.name, mime_type: file.type, size_bytes: file.size, storage_path: path, uploaded_by: uid,
     });
     if (err) { await sb.storage.from("documents").remove([path]); setBusy(false); return setError(friendlyError(err.message)); }
-    setBusy(false); setOk("Dokumen tersimpan."); setFile(null); if (input.current) input.current.value = ""; router.refresh();
+    setBusy(false); toast("Dokumen tersimpan."); setOk("Dokumen tersimpan."); setFile(null); if (input.current) input.current.value = ""; router.refresh();
   }
 
   return (

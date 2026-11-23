@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -30,7 +31,7 @@ export function NewCashAccountForm({ businessId }: { businessId: string }) {
     });
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setOk(true); setName(""); setBankName(""); setNumber(""); setOpening("");
+    setOk(true); toast("Rekening ditambahkan."); setName(""); setBankName(""); setNumber(""); setOpening("");
     router.refresh();
   }
 
@@ -83,7 +84,7 @@ export function TransferForm({ businessId, accounts }: { businessId: string; acc
     });
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setOk(true); setAmount("");
+    setOk(true); toast("Transaksi dicatat."); setAmount("");
     router.refresh();
   }
 

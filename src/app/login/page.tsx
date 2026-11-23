@@ -47,7 +47,7 @@ export default function LoginPage() {
   async function recover() {
     if (!email) return setError("Isi email terlebih dahulu.");
     const { error } = await supabaseBrowser().auth.resetPasswordForEmail(email, {
-      redirectTo: `${location.origin}/login`,
+      redirectTo: `${location.origin}/reset-password`,
     });
     if (error) setError(error.message); else setInfo("Tautan pemulihan telah dikirim ke email Anda.");
   }

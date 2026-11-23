@@ -1,4 +1,5 @@
 "use client";
+import { toast } from "@/lib/toast";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -31,7 +32,7 @@ export function AddPartyForm({ businessId, table }: { businessId: string; table:
     const { error: err } = await sb.from(table).insert({ business_id: businessId, name: f.name.trim(), phone: clean(f.phone), email: clean(f.email), address: clean(f.address) });
     setBusy(false);
     if (err) return setError(friendlyError(err.message));
-    setF({ name: "", phone: "", email: "", address: "" }); setOk(true); router.refresh();
+    setF({ name: "", phone: "", email: "", address: "" }); setOk(true); toast("Data tersimpan."); router.refresh();
   }
   return (
     <form onSubmit={submit} className="form">
