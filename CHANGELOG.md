@@ -1,5 +1,8 @@
 # Catatan rilis FINORA
 
+## 2.2.0 — 2026-11-24
+Pintasan keyboard (? dan g+huruf); tautan lewati ke konten; dropdown/checkbox seragam.
+
 ## 2.1.0 — 2026-11-23
 Halaman pemulihan kata sandi (/reset-password); notifikasi sukses beranimasi setelah transaksi; simulasi di halaman awal.
 

@@ -1,9 +1,16 @@
 /** Versi aplikasi dan catatan rilis. Hanya memuat hal yang benar-benar sudah ada di kode. */
-export const APP_VERSION = "2.1.0";
+export const APP_VERSION = "2.2.0";
 
 export type Release = { version: string; date: string; title: string; groups: { label: string; items: string[] }[] };
 
 export const RELEASES: Release[] = [
+  {
+    version: "2.2.0", date: "2026-11-24", title: "Pintasan keyboard dan aksesibilitas",
+    groups: [
+      { label: "Kenyamanan", items: ["Pintasan keyboard: tekan ? untuk daftar; g lalu d/s/p/c/k/b/j/r/a untuk pindah halaman.", "Kolom pilihan (dropdown) dengan panah yang seragam, kotak centang dan tombol pilihan berwarna aksen."] },
+      { label: "Aksesibilitas", items: ["Tautan “Lewati ke konten” untuk pengguna keyboard dan pembaca layar, serta warna teks bantu (placeholder) yang lebih terbaca."] },
+    ],
+  },
   {
     version: "2.1.0", date: "2026-11-23", title: "Pemulihan akun dan umpan balik",
     groups: [

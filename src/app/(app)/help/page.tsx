@@ -40,6 +40,9 @@ export default function HelpPage() {
       <Panel title="Cara melakukan hal umum">
         <div className="faq">{HOWTO.map(([q, a]) => <details key={q}><summary>{q}</summary><p>{a}</p></details>)}</div>
       </Panel>
+      <Panel title="Pintasan keyboard" className="mt">
+        <p className="muted sm">Di komputer: tekan <kbd>?</kbd> untuk melihat semua pintasan. Contoh: <kbd>/</kbd> untuk mencari, <kbd>g</kbd> lalu <kbd>d</kbd> ke Dashboard, <kbd>g</kbd> lalu <kbd>s</kbd> ke Penjualan.</p>
+      </Panel>
       <Panel title="Kamus istilah" className="mt">
         <dl className="gloss">{GLOSSARY.map(([t, d]) => <div key={t}><dt>{t}</dt><dd>{d}</dd></div>)}</dl>
       </Panel>

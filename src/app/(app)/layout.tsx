@@ -1,5 +1,6 @@
 import ScrollTop from "@/components/ScrollTop";
 import Toaster from "@/components/Toaster";
+import Shortcuts from "@/components/Shortcuts";
 import { supabaseServer } from "@/lib/supabase/server";
 import Sidebar from "@/components/Sidebar";
 import QuickAdd from "@/components/QuickAdd";
@@ -15,7 +16,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="shell">
       <a href="#main" className="skip">Lewati ke konten</a>
       <Sidebar businessName={biz?.name ?? null} userEmail={u.user?.email ?? null} />
-      <main className="main" id="main">
+      <a href="#main" className="skip-link">Lewati ke konten</a>
+      <main className="main" id="main" tabIndex={-1}>
         <AppBar />
         <WhatsNew />
         {children}
@@ -24,6 +26,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <ScrollTop />
       <IdleGuard />
       <Toaster />
+      <Shortcuts />
     </div>
   );
 }
