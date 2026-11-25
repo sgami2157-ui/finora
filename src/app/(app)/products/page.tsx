@@ -4,6 +4,8 @@ import { toCents } from "@/lib/accounting/money";
 import { fmtDate } from "@/lib/format";
 import { ProductActions, ProductRowActions } from "@/components/ProductForms";
 import { Badge, Callout, Empty, Kpi, PageHead, Panel, Term } from "@/components/ui";
+import BusinessTypeSwitch, { type BusinessType } from "@/components/BusinessTypeSwitch";
+import RecipePanel, { type SavedRow } from "@/components/RecipePanel";
 
 type P = { id: string; name: string; sku: string | null; sell_price: number | string; stock_qty: number | string; stock_value: number | string; min_stock: number | string };
 type M = { id: string; product_id: string | null; movement: string; qty: number | string; total_cost: number | string; moved_on: string };
@@ -18,12 +20,22 @@ export default async function ProductsPage() {
   if (!biz) return (<><PageHead title="Produk & Persediaan" /><Empty icon="inbox" title="Buat bisnis terlebih dahulu"><a className="btn primary" href="/dashboard">Ke Dashboard</a></Empty></>);
 
   const sb = await supabaseServer();
-  const [cash, pRes, mRes, bal] = await Promise.all([
+  const [cash, pRes, mRes, bal, setRes, ingRes, recRes] = await Promise.all([
     getCashAccounts(biz.id),
     sb.from("products").select("id,name,sku,sell_price,stock_qty,stock_value,min_stock").eq("business_id", biz.id).is("deleted_at", null).order("name").limit(500),
     sb.from("inventory_movements").select("id,product_id,movement,qty,total_cost,moved_on").eq("business_id", biz.id).not("product_id", "is", null).order("moved_on", { ascending: false }).order("created_at", { ascending: false }).limit(15),
     getBalances(biz.id, null, null),
+    sb.from("business_settings").select("business_type").eq("business_id", biz.id).maybeSingle(),
+    sb.from("ingredients").select("id,name,unit,ref_price").eq("business_id", biz.id).is("deleted_at", null).limit(1000),
+    sb.from("recipe_items").select("product_id,ingredient_id,qty").eq("business_id", biz.id).limit(5000),
   ]);
+  const bizType: BusinessType = (setRes.data as { business_type?: string } | null)?.business_type === "fnb" ? "fnb" : "umum";
+  const ingById = new Map(((ingRes.data ?? []) as { id: string; name: string; unit: string; ref_price: number | string | null }[]).map((i) => [i.id, i]));
+  const saved: Record<string, SavedRow[]> = {};
+  for (const r of (recRes.data ?? []) as { product_id: string; ingredient_id: string; qty: number | string }[]) {
+    const ing = ingById.get(r.ingredient_id); if (!ing) continue;
+    (saved[r.product_id] ??= []).push({ name: ing.name, unit: ing.unit as SavedRow["unit"], qty: Number(r.qty), price: ing.ref_price == null ? null : Number(ing.ref_price) });
+  }
   const products = ((pRes.data ?? []) as P[]).map((p) => ({
     id: p.id, name: p.name, sku: p.sku, sell_price: Number(p.sell_price), stock_qty: Number(p.stock_qty), stock_value: Number(p.stock_value), min_stock: Number(p.min_stock),
   }));
@@ -38,7 +50,12 @@ export default async function ProductsPage() {
 
   return (
     <>
-      <PageHead title="Produk & Persediaan" desc="Daftar barang dagangan, jumlah stok, dan modalnya. Saat barang terjual, modalnya (HPP) dicatat otomatis." />
+      <PageHead title="Produk & Persediaan" desc={bizType === "fnb" ? "Menu, stok, dan resep. Sistem memberi saran takaran bahan yang lazim dipakai di lapangan." : "Daftar barang dagangan, jumlah stok, dan modalnya. Saat barang terjual, modalnya (HPP) dicatat otomatis."}>
+        <BusinessTypeSwitch businessId={biz.id} value={bizType} />
+      </PageHead>
+      {bizType === "umum" && products.length === 0 && (
+        <Callout title="Usaha makanan atau minuman?">Pilih <strong>Makanan &amp; Minuman</strong> di kanan atas. Anda akan mendapat saran takaran bahan per porsi (misalnya untuk pecel lele, nasi goreng, es teh), perhitungan biaya per porsi, dan rencana belanja bahan.</Callout>
+      )}
       <div className="kpis">
         <Kpi label="Jumlah produk" value={String(products.length)} icon="box" tone="pri" hint={empty > 0 ? `${empty} produk stoknya habis` : "Semua punya stok"} />
         <Kpi label="Stok menipis" value={String(low)} icon="alert" tone={low > 0 ? "neg" : "pos"} hint={low > 0 ? "Sudah di bawah batas minimum" : "Tidak ada yang di bawah batas"} />
@@ -48,6 +65,11 @@ export default async function ProductsPage() {
         <Callout tone="warn" title="Nilai stok berbeda dengan catatan keuangan">
           Catatan keuangan (Persediaan Barang) menunjukkan {idr(glInv)}, sedangkan nilai stok produk {idr(stockValue)}. Biasanya ini karena ada pembelian yang dicatat lewat menu Pembelian, bukan lewat “Tambah stok”. Untuk barang dagangan, gunakan “Tambah stok” di halaman ini.
         </Callout>
+      )}
+      {bizType === "fnb" && (
+        <Panel title="Resep & takaran bahan" desc="Saran takaran per porsi untuk menu umum, hitung biaya per porsi, dan rencanakan belanja bahan">
+          <RecipePanel key={products.map((p) => p.id).join(",")} businessId={biz.id} products={products.map((p) => ({ id: p.id, name: p.name, sell_price: p.sell_price }))} saved={saved} />
+        </Panel>
       )}
       <div className="split">
         <Panel title="Kelola stok"><ProductActions businessId={biz.id} products={products} cashAccounts={cash.map((c) => ({ id: c.id, name: c.name, kind: c.kind }))} /></Panel>

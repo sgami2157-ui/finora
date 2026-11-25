@@ -1,9 +1,20 @@
 /** Versi aplikasi dan catatan rilis. Hanya memuat hal yang benar-benar sudah ada di kode. */
-export const APP_VERSION = "2.2.0";
+export const APP_VERSION = "2.3.0";
 
 export type Release = { version: string; date: string; title: string; groups: { label: string; items: string[] }[] };
 
 export const RELEASES: Release[] = [
+  {
+    version: "2.3.0", date: "2026-11-25", title: "Mode Makanan & Minuman",
+    groups: [
+      { label: "Produk & Persediaan", items: [
+        "Pilihan jenis usaha: Umum atau Makanan & Minuman (hanya pemilik/admin yang dapat mengubah).",
+        "Di mode F&B: saran takaran bahan per porsi untuk 11 menu umum (pecel lele, nasi goreng, ayam geprek, mie ayam, soto, bakso, sate, gado-gado, es teh, kopi susu, es jeruk), lengkap dengan penanda bahan pokok.",
+        "Isi harga beli bahan untuk melihat biaya per porsi, margin, harga jual saran sesuai target margin, dan rencana kebutuhan bahan untuk sejumlah porsi.",
+        "Resep tersimpan per produk. Takaran hanyalah perkiraan umum di lapangan, bukan resep resmi; selalu sesuaikan.",
+      ] },
+    ],
+  },
   {
     version: "2.2.0", date: "2026-11-24", title: "Pintasan keyboard dan aksesibilitas",
     groups: [

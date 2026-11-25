@@ -1,5 +1,8 @@
 # Catatan rilis FINORA
 
+## 2.3.0 — 2026-11-25
+Mode Makanan & Minuman: saran takaran bahan per porsi (11 menu umum), biaya per porsi, harga jual saran, rencana bahan, resep tersimpan (migrasi 0017, RPC save_recipe).
+
 ## 2.2.0 — 2026-11-24
 Pintasan keyboard (? dan g+huruf); tautan lewati ke konten; dropdown/checkbox seragam.
 

@@ -1,6 +1,6 @@
 {
   "name": "finora",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types tests/accounting.test.ts tests/csv.test.ts"
+    "test": "node --test --experimental-strip-types tests/accounting.test.ts tests/csv.test.ts tests/fnb.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",

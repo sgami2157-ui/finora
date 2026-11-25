@@ -755,3 +755,32 @@ select { appearance: none; -webkit-appearance: none; padding-right: 36px; backgr
 @media (max-width: 800px) { .kbd-backdrop { display: none; } }
 @media print { .skip-link, .kbd-backdrop { display: none; } }
 select, .form .field select, .pay-form .field select { padding-right: 36px; }
+
+/* ===== Mode F&B: pilihan jenis usaha & resep ===== */
+.seg-switch { display: inline-flex; padding: 3px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); }
+.seg-switch button { border: 0; background: transparent; min-height: 36px; padding: 0 14px; border-radius: 999px; color: var(--muted); font-weight: 600; font-size: 13px; }
+.seg-switch button.on { background: var(--primary); color: #1a1006; }
+.recipe { display: grid; gap: 14px; }
+.recipe-pick { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.recipe-hint { display: grid; gap: 8px; padding: 12px 14px; border-radius: 14px; border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--border)); background: color-mix(in srgb, var(--primary) 7%, var(--card)); font-size: 14px; }
+.recipe-hint small { color: var(--muted); } .recipe-hint button { justify-self: start; }
+.recipe-rows { display: grid; gap: 8px; }
+.recipe-row { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.3fr) minmax(0, 1.2fr) 36px; gap: 8px; align-items: start; }
+.recipe-row.head { font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; }
+.recipe-row input, .recipe-row select { width: 100%; min-height: 42px; padding: 0 10px; }
+.recipe-row .rn { display: grid; gap: 3px; min-width: 0; } .recipe-row .rn small { color: var(--muted); font-size: 11.5px; }
+.recipe-row .rq { display: grid; grid-template-columns: minmax(0, 1fr) 72px; gap: 6px; }
+.pokok { justify-self: start; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: color-mix(in srgb, var(--success) 18%, transparent); color: var(--success); }
+.recipe-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.recipe-sum > div { display: grid; gap: 3px; padding: 12px; border-radius: 14px; background: var(--w04); min-width: 0; align-content: start; }
+.recipe-sum small { color: var(--muted); font-size: 12px; } .recipe-sum b { font-size: 18px; font-variant-numeric: tabular-nums; } .recipe-sum em { font-style: normal; font-size: 12px; color: var(--muted); }
+.recipe-sum em.pos { color: var(--success); } .recipe-sum em.neg { color: var(--danger); }
+.mini { width: 56px; min-height: 34px; padding: 0 8px; text-align: center; display: inline-block; }
+.recipe-plan { display: grid; gap: 8px; } .recipe-plan ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 20px; }
+.recipe-plan li { display: flex; justify-content: space-between; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+@media (max-width: 800px) {
+  .recipe-row { grid-template-columns: minmax(0, 1fr) 36px; padding: 10px; border: 1px solid var(--border); border-radius: 14px; }
+  .recipe-row.head { display: none; } .recipe-row .rn { grid-column: 1; } .recipe-row .rq, .recipe-row .rp { grid-column: 1; }
+  .recipe-row > .bell-x { grid-column: 2; grid-row: 1; }
+  .recipe-sum { grid-template-columns: 1fr; } .recipe-plan ul { grid-template-columns: 1fr; }
+}
